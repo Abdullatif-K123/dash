@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useReducer, useRef } from "react";
 import PropTypes from "prop-types";
-import axios from "axios";
 import { useRouter } from "next/router";
+import axios from "axios";
 const HANDLERS = {
   INITIALIZE: "INITIALIZE",
   SIGN_IN: "SIGN_IN",
@@ -58,26 +58,33 @@ const reducer = (state, action) =>
 export const AuthContext = createContext({ undefined });
 
 export const AuthProvider = (props) => {
-  const router = useRouter();
   const { children } = props;
+  const router = useRouter();
   const [state, dispatch] = useReducer(reducer, initialState);
   const initialized = useRef(false);
 
   const initialize = async () => {
     initialized.current = true;
 
-    const isAuthenticated = window.sessionStorage.getItem("authenticated") === "true";
+    let isAuthenticated = window.sessionStorage.getItem("authenticated") === "true";
     const user = window.sessionStorage.getItem("user");
+    try {
+      isAuthenticated = window.sessionStorage.getItem("authenticated") === "true";
+    } catch (err) {
+      console.error(err);
+    }
 
-    if (!isAuthenticated) {
-      // If not authenticated, redirect to login page
-      router.push("/auth/login");
-    } else {
+    if (isAuthenticated) {
       dispatch({
         type: HANDLERS.INITIALIZE,
         payload: user,
       });
       router.replace("/");
+    } else {
+      router.push("/auth/login");
+      dispatch({
+        type: HANDLERS.INITIALIZE,
+      });
     }
   };
 
