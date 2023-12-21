@@ -182,6 +182,7 @@ const MenuBar = ({ editor }) => {
 };
 //export default
 const TipTap = ({ setDesc, desc }) => {
+  console.log(desc);
   const editor = useEditor({
     extensions: [
       StarterKit,
