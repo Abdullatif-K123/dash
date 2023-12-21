@@ -6,8 +6,8 @@ import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import ArrowRight from "@heroicons/react/24/solid/ArrowRightIcon";
 import { useState } from "react";
 import SvgIcon from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ExpandMoreIcon from "@heroicons/react/24/solid/ArrowRightIcon";
+import ChevronRightIcon from "@heroicons/react/24/solid/ArrowDownIcon";
 import ChevronUpDownIcon from "@heroicons/react/24/solid/ChevronUpDownIcon";
 export const SideNavItem = (props) => {
   const { active = false, disabled, external, icon, path, title, icon1 } = props;
