@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useReducer, useRef } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
+import { useRouter } from "next/router";
 const HANDLERS = {
   INITIALIZE: "INITIALIZE",
   SIGN_IN: "SIGN_IN",
@@ -57,6 +58,7 @@ const reducer = (state, action) =>
 export const AuthContext = createContext({ undefined });
 
 export const AuthProvider = (props) => {
+  const router = useRouter();
   const { children } = props;
   const [state, dispatch] = useReducer(reducer, initialState);
   const initialized = useRef(false);
@@ -64,30 +66,18 @@ export const AuthProvider = (props) => {
   const initialize = async () => {
     initialized.current = true;
 
-    let isAuthenticated = false;
+    const isAuthenticated = window.sessionStorage.getItem("authenticated") === "true";
+    const user = window.sessionStorage.getItem("user");
 
-    try {
-      isAuthenticated = window.sessionStorage.getItem("authenticated") === "true";
-    } catch (err) {
-      console.error(err);
-    }
-
-    if (isAuthenticated) {
-      const user = {
-        id: "5e86809283e28b96d2d38537",
-        avatar: "/assets/avatars/avatar-anika-visser.png",
-        name: "Anika Visser",
-        email: "anika.visser@devias.io",
-      };
-
+    if (!isAuthenticated) {
+      // If not authenticated, redirect to login page
+      router.push("/auth/login");
+    } else {
       dispatch({
         type: HANDLERS.INITIALIZE,
         payload: user,
       });
-    } else {
-      dispatch({
-        type: HANDLERS.INITIALIZE,
-      });
+      router.replace("/");
     }
   };
 
