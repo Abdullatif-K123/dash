@@ -24,7 +24,7 @@ const statusMap = {
   delivered: "success",
   refunded: "error",
 };
-
+const feedBackType = ["Recommendation", "Error Repot", "Question", "Other"];
 export const MessagesOverView = (props) => {
   const { data = [], sx } = props;
   const router = useRouter();
@@ -38,6 +38,7 @@ export const MessagesOverView = (props) => {
               <TableRow>
                 <TableCell>Name</TableCell>
                 <TableCell>Email</TableCell>
+                <TableCell>FeedBack Title</TableCell>
                 <TableCell sortDirection="desc">Feedback Type</TableCell>
                 <TableCell>Status</TableCell>
               </TableRow>
@@ -55,12 +56,13 @@ export const MessagesOverView = (props) => {
                   >
                     <TableCell>{order.name}</TableCell>
                     <TableCell>{order.email}</TableCell>
-                    <TableCell>{order.feedbackType}</TableCell>
+                    <TableCell>{order.feedBackTitle}</TableCell>
+                    <TableCell>{feedBackType[order.feedBackType]}</TableCell>
                     <TableCell>
                       <SeverityPill
-                        color={statusMap[order.status === "opened" ? ["delivered"] : ["refunded"]]}
+                        color={statusMap[order.isSeen === true ? ["delivered"] : ["refunded"]]}
                       >
-                        {order.status}
+                        {order.isSeen ? "Opened" : "UnRead"}
                       </SeverityPill>
                     </TableCell>
                   </TableRow>

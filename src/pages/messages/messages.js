@@ -11,27 +11,6 @@ import { useAuth } from "src/hooks/use-auth";
 import axios from "axios";
 const now = new Date();
 
-const data = [
-  {
-    id: "5e887b209c28ac3dd97f6db5",
-    fileName: "European ATM Master Plan Executive summary (spanish)",
-    DateAdded: "24-05-2017",
-    FileSize: "634.54KB",
-  },
-  {
-    id: "5e887b209c28ac3dd97f6db6",
-    fileName: "European ATM Master Plan Executive summary (spanish)",
-    DateAdded: "24-05-2017",
-    FileSize: "634.54KB",
-  },
-  {
-    id: "5e887b209c28ac3dd97f6db7",
-    fileName: "European ATM Master Plan Executive summary (spanish)",
-    DateAdded: "24-05-2017",
-    FileSize: "634.54KB",
-  },
-];
-
 const useCustomers = (page, rowsPerPage) => {
   return useMemo(() => {
     return applyPagination(data, page, rowsPerPage);
@@ -42,7 +21,7 @@ const useCustomerIds = (customers) => {
   return useMemo(() => {
     return customers.map((customer) => customer.id);
   }, [customers]);
-};  
+};
 
 const Page = () => {
   //Get the data from server
@@ -111,52 +90,7 @@ const Page = () => {
               </div>
             </Stack>
             <CustomersSearch />
-            <MessagesOverView
-              data={[
-                {
-                  id: "213213",
-                  name: "Hussan",
-                  email: "Hussan@gmail.com",
-                  feedbackType: "Recomendation",
-                  status: "opened",
-                },
-                {
-                  id: "21d3223",
-                  name: "Ahmad",
-                  email: "Ahmad@gmail.com",
-                  feedbackType: "others",
-                  status: "UnRead",
-                },
-                {
-                  id: "df2133",
-                  name: "Mike",
-                  email: "Mike@gmail.com",
-                  feedbackType: "Recomendation",
-                  status: "UnRead",
-                },
-                {
-                  id: "2133g",
-                  name: "Mike",
-                  email: "Mike@gmail.com",
-                  feedbackType: "Recomendation",
-                  status: "UnRead",
-                },
-                {
-                  id: "2131123ads",
-                  name: "Mike",
-                  email: "Mike@gmail.com",
-                  feedbackType: "Recomendation",
-                  status: "opened",
-                },
-                {
-                  id: "213323d",
-                  name: "Mike",
-                  email: "Mike@gmail.com",
-                  feedbackType: "Recomendation",
-                  status: "UnRead",
-                },
-              ]}
-            />
+            <MessagesOverView data={apiData} />
           </Stack>
         </Container>
       </Box>

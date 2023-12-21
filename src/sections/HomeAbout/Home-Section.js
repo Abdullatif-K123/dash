@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import {
   TextareaAutosize,
   TextField,
@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import CustomizedSnackbars from "src/components/Snackbar";
-
+import TextEditor from "./DraftReact";
 const HomeForm = ({ title, desc, user }) => {
   const [open, setOpen] = React.useState(false);
 
@@ -101,6 +101,7 @@ const HomeForm = ({ title, desc, user }) => {
           </form>
         </CardContent>
       </Card>
+      <TextEditor />
     </Container>
   );
 };

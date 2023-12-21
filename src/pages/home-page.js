@@ -7,6 +7,7 @@ import { AccountProfileDetails } from "src/sections/account/account-profile-deta
 import HomeForm from "src/sections/HomeAbout/Home-Section";
 import AboutForm from "src/sections/HomeAbout/About-Section";
 import axios from "axios";
+
 import { useAuth } from "src/hooks/use-auth";
 const HomePage = () => {
   const [homeData, setHomeData] = useState({});
@@ -48,6 +49,7 @@ const HomePage = () => {
     // Call the fetchData function when the component mounts
     fetchDataAbout();
   }, [user]); // The empty dependency array ensures that the effect runs once when the component mounts
+
   return (
     <>
       <Head>
