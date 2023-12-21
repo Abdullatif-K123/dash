@@ -21,6 +21,7 @@ export const items = [
       </SvgIcon>
     ),
   },
+
   {
     title: "Documents",
     path: "/documents",
@@ -57,12 +58,27 @@ export const items = [
       </SvgIcon>
     ),
   },
+
   {
     title: "Account",
     path: "/account",
     icon: (
       <SvgIcon fontSize="small">
         <UserIcon />
+      </SvgIcon>
+    ),
+  },
+  {
+    title: "Master Plan",
+    path: "/master-plan",
+    icon: (
+      <SvgIcon fontSize="small">
+        <CogIcon />
+      </SvgIcon>
+    ),
+    icon1: (
+      <SvgIcon fontSize="small">
+        <WindowIcon />
       </SvgIcon>
     ),
   },
@@ -74,23 +90,20 @@ export const items = [
         <CogIcon />
       </SvgIcon>
     ),
-  },
-  {
-    title: "Login",
-    path: "/auth/login",
-    icon: (
+    icon1: (
       <SvgIcon fontSize="small">
-        <LockClosedIcon />
+        <WindowIcon />
       </SvgIcon>
     ),
   },
-  {
-    title: "Register",
-    path: "/auth/register",
-    icon: (
-      <SvgIcon fontSize="small">
-        <UserPlusIcon />
-      </SvgIcon>
-    ),
-  },
+
+  // {
+  //   title: "Register",
+  //   path: "/auth/register",
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <UserPlusIcon />
+  //     </SvgIcon>
+  //   ),
+  // },
 ];
