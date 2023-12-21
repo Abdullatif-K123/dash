@@ -10,7 +10,7 @@ import { MessagesOverView } from "src/sections/messages/MessagesOverView";
 import { useAuth } from "src/hooks/use-auth";
 import axios from "axios";
 const now = new Date();
-
+const data = [];
 const useCustomers = (page, rowsPerPage) => {
   return useMemo(() => {
     return applyPagination(data, page, rowsPerPage);
@@ -47,6 +47,7 @@ const Page = () => {
 
     fetchData();
   }, [user]);
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const customers = useCustomers(page, rowsPerPage);
@@ -61,6 +62,13 @@ const Page = () => {
     setRowsPerPage(event.target.value);
   }, []);
 
+  if (!apiData.length) {
+    return (
+      <Typography align="center" gutterBottom variant="h5">
+        Loading...
+      </Typography>
+    );
+  }
   return (
     <>
       <Head>
@@ -75,20 +83,7 @@ const Page = () => {
       >
         <Container maxWidth="xl">
           <Stack spacing={3}>
-            <Stack direction="row" justifyContent="space-between" spacing={4}>
-              <div>
-                <Button
-                  startIcon={
-                    <SvgIcon fontSize="small">
-                      <PlusIcon />
-                    </SvgIcon>
-                  }
-                  variant="contained"
-                >
-                  Add
-                </Button>
-              </div>
-            </Stack>
+            <Stack direction="row" justifyContent="space-between" spacing={4}></Stack>
             <CustomersSearch />
             <MessagesOverView data={apiData} />
           </Stack>

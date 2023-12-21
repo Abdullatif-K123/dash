@@ -45,7 +45,7 @@ const HomeForm = ({ title, desc, user }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+    formData.description = descs;
     try {
       const response = await axios.put("https://gaca.somee.com/api/Home/Update", formData, {
         headers: { Authorization: `Bearer ${user}` },
@@ -70,10 +70,7 @@ const HomeForm = ({ title, desc, user }) => {
           <Typography variant="h4" align="center" gutterBottom>
             Update Home
           </Typography>
-          <form
-            onSubmit={handleSubmit}
-            style={{ display: "flex", flexDirection: "column", gap: "10px" }}
-          >
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
             <InputLabel htmlFor="title">Title</InputLabel>
             <TextField
               id="title"
@@ -87,10 +84,10 @@ const HomeForm = ({ title, desc, user }) => {
             <InputLabel htmlFor="description">Description</InputLabel>
 
             <TipTap setDesc={setDesc} desc={desc} />
-            <Button type="submit" variant="contained" color="primary">
+            <Button type="submit" variant="contained" color="primary" onClick={handleSubmit}>
               Update
             </Button>
-          </form>
+          </div>
         </CardContent>
       </Card>
     </Container>

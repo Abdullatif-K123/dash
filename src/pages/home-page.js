@@ -31,29 +31,18 @@ const HomePage = () => {
 
     // Call the fetchData function when the component mounts
     fetchData();
-    const fetchDataAbout = async () => {
-      try {
-        // Make your API request here
-        const response = await axios.get("https://gaca.somee.com/api/About/GetData", {
-          headers: { Authorization: `Bearer ${user}` },
-        });
-        console.log(response.data);
-        setAboutData(response.data.returnData);
-
-        // Update the component state with the fetched data
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    // Call the fetchData function when the component mounts
-    fetchDataAbout();
   }, [user]); // The empty dependency array ensures that the effect runs once when the component mounts
-
+  if (!Object.keys(homeData).length) {
+    return (
+      <Typography align="center" gutterBottom variant="h5">
+        Loading...
+      </Typography>
+    );
+  }
   return (
     <>
       <Head>
-        <title>Pages | GACA</title>
+        <title>Settings Home | GACA</title>
       </Head>
       <Box
         component="main"

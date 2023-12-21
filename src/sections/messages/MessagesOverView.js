@@ -18,16 +18,18 @@ import {
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
 import { SeverityPill } from "src/components/severity-pill";
+import TableMessage from "./TableMessage";
+import { useState } from "react";
 
-const statusMap = {
-  pending: "warning",
-  delivered: "success",
-  refunded: "error",
-};
-const feedBackType = ["Recommendation", "Error Repot", "Question", "Other"];
 export const MessagesOverView = (props) => {
-  const { data = [], sx } = props;
+  const { datas = [], sx } = props;
+  const [data, setData] = useState(props.data);
   const router = useRouter();
+  const handleDeleted = (id) => {
+    const updatedData = data.filter((item) => item.id !== id);
+    console.log(updatedData);
+    setData(updatedData);
+  };
   return (
     <Card sx={sx}>
       <CardHeader title="Latest Messages" />
@@ -45,28 +47,7 @@ export const MessagesOverView = (props) => {
             </TableHead>
             <TableBody>
               {data.map((order) => {
-                return (
-                  <TableRow
-                    hover
-                    key={order.id}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      router.push("/messages ");
-                    }}
-                  >
-                    <TableCell>{order.name}</TableCell>
-                    <TableCell>{order.email}</TableCell>
-                    <TableCell>{order.feedBackTitle}</TableCell>
-                    <TableCell>{feedBackType[order.feedBackType]}</TableCell>
-                    <TableCell>
-                      <SeverityPill
-                        color={statusMap[order.isSeen === true ? ["delivered"] : ["refunded"]]}
-                      >
-                        {order.isSeen ? "Opened" : "UnRead"}
-                      </SeverityPill>
-                    </TableCell>
-                  </TableRow>
-                );
+                return <TableMessage key={order.id} order={order} DeleteItems={handleDeleted} />;
               })}
             </TableBody>
           </Table>

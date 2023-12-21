@@ -12,10 +12,12 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import CustomizedSnackbars from "src/components/Snackbar";
-
+import TipTap from "./TipTapEditor";
 const AboutForm = ({ user, content, mission, vision }) => {
   const [open, setOpen] = React.useState(false);
-
+  const [about1, setAbout1] = useState(content);
+  const [about2, setAbout2] = useState(vision);
+  const [about3, setAbout3] = useState(mission);
   const handleClick = () => {
     setOpen(true);
   };
@@ -34,6 +36,9 @@ const AboutForm = ({ user, content, mission, vision }) => {
   });
 
   useEffect(() => {
+    setAbout1(content);
+    setAbout2(vision);
+    setAbout3(mission);
     setFormData({ content: content, vision: vision, mission: mission });
   }, [content, mission, vision]);
   const handleChange = (event) => {
@@ -59,7 +64,7 @@ const AboutForm = ({ user, content, mission, vision }) => {
   };
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="m">
       <CustomizedSnackbars
         open={open}
         handleClose={handleClose}
@@ -71,42 +76,15 @@ const AboutForm = ({ user, content, mission, vision }) => {
           <Typography variant="h4" align="center" gutterBottom>
             About Update
           </Typography>
-          <form
-            onSubmit={handleSubmit}
-            style={{ display: "flex", flexDirection: "column", gap: "15px" }}
-          >
+          <form style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
             <InputLabel htmlFor="content">Content</InputLabel>
-            <TextareaAutosize
-              placeholder="Content"
-              style={{ width: "100%", marginBottom: "1rem" }}
-              minRows={15}
-              minCo
-              name="content"
-              value={formData.content}
-              onChange={handleChange}
-            />
+            <TipTap setDesc={setAbout1} desc={about1} />
             <InputLabel htmlFor="vision">Vision</InputLabel>
-            <TextareaAutosize
-              placeholder="vision"
-              style={{ width: "100%", marginBottom: "1rem" }}
-              minRows={15}
-              minCo
-              name="vision"
-              value={formData.vision}
-              onChange={handleChange}
-            />
+            <TipTap setDesc={setAbout2} desc={about2} />
             <InputLabel htmlFor="mission">Mission</InputLabel>
-            <TextareaAutosize
-              placeholder="mission"
-              style={{ width: "100%", marginBottom: "1rem" }}
-              minRows={15}
-              minCo
-              name="mission"
-              value={formData.mission}
-              onChange={handleChange}
-            />
+            <TipTap setDesc={setAbout3} desc={about3} />
 
-            <Button type="submit" variant="contained" color="primary">
+            <Button onClick={handleSubmit} type="submit" variant="contained" color="primary">
               Update
             </Button>
           </form>
