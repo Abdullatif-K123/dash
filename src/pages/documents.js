@@ -179,7 +179,7 @@ const Page = () => {
   return (
     <>
       <Head>
-        <title>Downloads | GACA</title>
+        <title>Documents | GACA</title>
       </Head>
       <Box
         component="main"
@@ -264,6 +264,7 @@ const Page = () => {
               page={page}
               rowsPerPage={rowsPerPage}
               selected={customersSelection.selected}
+              handleRemove={handleRemove}
             />
           </Stack>
         </Container>

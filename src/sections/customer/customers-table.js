@@ -45,6 +45,7 @@ export const CustomersTable = (props) => {
     page = 0,
     rowsPerPage = 0,
     selected = [],
+    handleRemove,
   } = props;
 
   const selectedSome = selected.length > 0 && selected.length < items.length;
@@ -89,7 +90,7 @@ export const CustomersTable = (props) => {
         }
       );
       setIsDialogOpen(false);
-
+      handleRemove(currentId);
       console.log(response);
     } catch (error) {
       console.log(error);

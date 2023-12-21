@@ -9,6 +9,7 @@ import UsersIcon from "@heroicons/react/24/solid/DocumentIcon";
 import FilmIcon from "@heroicons/react/24/solid/NewspaperIcon";
 import WindowIcon from "@heroicons/react/24/solid/WindowIcon";
 import BriefcaseIcon from "@heroicons/react/24/solid/BriefcaseIcon";
+import BuildingOfficeIcon from "@heroicons/react/24/solid/BuildingOfficeIcon";
 import { SvgIcon } from "@mui/material";
 
 export const items = [
@@ -73,7 +74,7 @@ export const items = [
     path: "/master-plan",
     icon: (
       <SvgIcon fontSize="small">
-        <CogIcon />
+        <BuildingOfficeIcon />
       </SvgIcon>
     ),
     icon1: (
@@ -96,14 +97,4 @@ export const items = [
       </SvgIcon>
     ),
   },
-
-  // {
-  //   title: "Register",
-  //   path: "/auth/register",
-  //   icon: (
-  //     <SvgIcon fontSize="small">
-  //       <UserPlusIcon />
-  //     </SvgIcon>
-  //   ),
-  // },
 ];
