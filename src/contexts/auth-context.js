@@ -62,26 +62,32 @@ export const AuthProvider = (props) => {
   const initialized = useRef(false);
 
   const initialize = async () => {
-    // Prevent from calling twice in development mode with React.StrictMode enabled
-    if (initialized.current) {
-      return;
-    }
-
     initialized.current = true;
 
-    const isAuthenticated = window.sessionStorage.getItem("authenticated") === "true";
-    const user = window.sessionStorage.getItem("user");
-    console.log(user);
-    console.log(isAuthenticated);
-    if (!isAuthenticated) {
-      // If not authenticated, redirect to login page
-      router.push("/auth/login");
-    } else {
+    let isAuthenticated = false;
+
+    try {
+      isAuthenticated = window.sessionStorage.getItem("authenticated") === "true";
+    } catch (err) {
+      console.error(err);
+    }
+
+    if (isAuthenticated) {
+      const user = {
+        id: "5e86809283e28b96d2d38537",
+        avatar: "/assets/avatars/avatar-anika-visser.png",
+        name: "Anika Visser",
+        email: "anika.visser@devias.io",
+      };
+
       dispatch({
         type: HANDLERS.INITIALIZE,
         payload: user,
       });
-      router.replace("/");
+    } else {
+      dispatch({
+        type: HANDLERS.INITIALIZE,
+      });
     }
   };
 
@@ -147,8 +153,6 @@ export const AuthProvider = (props) => {
   };
 
   const signOut = () => {
-    window.sessionStorage.setItem("authenticated", "false");
-    window.sessionStorage.setItem("user", "");
     dispatch({
       type: HANDLERS.SIGN_OUT,
     });
