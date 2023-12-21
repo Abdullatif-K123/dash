@@ -12,10 +12,10 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import CustomizedSnackbars from "src/components/Snackbar";
-import TextEditor from "./DraftReact";
+import TipTap from "./TipTapEditor";
 const HomeForm = ({ title, desc, user }) => {
   const [open, setOpen] = React.useState(false);
-
+  const [descs, setDesc] = useState("");
   const handleClick = () => {
     setOpen(true);
   };
@@ -58,14 +58,14 @@ const HomeForm = ({ title, desc, user }) => {
   };
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="m">
       <CustomizedSnackbars
         open={open}
         handleClose={handleClose}
         type={"success"}
         message={"The data has been changed"}
       />
-      <Card sx={{ mt: 4 }}>
+      <Card sx={{ mt: 3 }}>
         <CardContent>
           <Typography variant="h4" align="center" gutterBottom>
             Update Home
@@ -85,23 +85,14 @@ const HomeForm = ({ title, desc, user }) => {
             />
 
             <InputLabel htmlFor="description">Description</InputLabel>
-            <TextareaAutosize
-              placeholder="Description"
-              style={{ width: "100%", marginBottom: "1rem" }}
-              minRows={15}
-              minCo
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-            />
 
+            <TipTap setDesc={setDesc} desc={desc} />
             <Button type="submit" variant="contained" color="primary">
               Update
             </Button>
           </form>
         </CardContent>
       </Card>
-      <TextEditor />
     </Container>
   );
 };
