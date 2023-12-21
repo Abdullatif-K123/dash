@@ -13,23 +13,8 @@ const AboutPage = () => {
   const [aboutData, setAboutData] = useState({});
   const { user } = useAuth();
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Make your API request here
-        const response = await axios.get("https://gaca.somee.com/api/Home/GetData", {
-          headers: { Authorization: `Bearer ${user}` },
-        });
-
-        setHomeData(response.data.returnData);
-
-        // Update the component state with the fetched data
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
     // Call the fetchData function when the component mounts
-    fetchData();
+
     const fetchDataAbout = async () => {
       try {
         // Make your API request here
@@ -48,6 +33,13 @@ const AboutPage = () => {
     // Call the fetchData function when the component mounts
     fetchDataAbout();
   }, [user]); // The empty dependency array ensures that the effect runs once when the component mounts
+  if (!Object.keys(aboutData).length) {
+    return (
+      <Typography align="center" gutterBottom variant="h5">
+        Loading...
+      </Typography>
+    );
+  }
   return (
     <>
       <Head>
