@@ -2,10 +2,13 @@ import ChartBarIcon from "@heroicons/react/24/solid/ChartBarIcon";
 import CogIcon from "@heroicons/react/24/solid/CogIcon";
 import LockClosedIcon from "@heroicons/react/24/solid/LockClosedIcon";
 import ShoppingBagIcon from "@heroicons/react/24/solid/ShoppingBagIcon";
+import Messages from "@heroicons/react/24/solid/DocumentTextIcon";
 import UserIcon from "@heroicons/react/24/solid/UserIcon";
 import UserPlusIcon from "@heroicons/react/24/solid/UserPlusIcon";
 import UsersIcon from "@heroicons/react/24/solid/DocumentIcon";
-import XCircleIcon from "@heroicons/react/24/solid/XCircleIcon";
+import FilmIcon from "@heroicons/react/24/solid/NewspaperIcon";
+import WindowIcon from "@heroicons/react/24/solid/WindowIcon";
+import BriefcaseIcon from "@heroicons/react/24/solid/BriefcaseIcon";
 import { SvgIcon } from "@mui/material";
 
 export const items = [
@@ -27,13 +30,30 @@ export const items = [
       </SvgIcon>
     ),
   },
-
   {
-    title: "Companies",
+    title: "Blogs",
+    path: "/blogs",
+    icon: (
+      <SvgIcon fontSize="small">
+        <FilmIcon />
+      </SvgIcon>
+    ),
+  },
+  {
+    title: "Messages",
+    path: "/messages",
+    icon: (
+      <SvgIcon fontSize="small">
+        <Messages />
+      </SvgIcon>
+    ),
+  },
+  {
+    title: "Stakeholders",
     path: "/companies",
     icon: (
       <SvgIcon fontSize="small">
-        <ShoppingBagIcon />
+        <BriefcaseIcon />
       </SvgIcon>
     ),
   },
@@ -70,15 +90,6 @@ export const items = [
     icon: (
       <SvgIcon fontSize="small">
         <UserPlusIcon />
-      </SvgIcon>
-    ),
-  },
-  {
-    title: "Error",
-    path: "/404",
-    icon: (
-      <SvgIcon fontSize="small">
-        <XCircleIcon />
       </SvgIcon>
     ),
   },
