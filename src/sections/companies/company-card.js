@@ -11,6 +11,8 @@ import {
   SvgIcon,
   Typography,
   Button,
+  Switch,
+  FormControlLabel,
 } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -21,6 +23,7 @@ import { FormControl } from "@mui/material";
 import { Input } from "@mui/material";
 import { InputLabel } from "@mui/material";
 import { useState } from "react";
+
 import axios from "axios";
 
 export const CompanyCard = (props) => {
@@ -40,8 +43,12 @@ export const CompanyCard = (props) => {
   //Delete dialog handler
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [checked, setCheckd] = useState(false);
+  const [title, setTitle] = useState(company.title);
+  const [imageUrl, setImageUrl] = useState(company.imageUrl);
   const titleRef = useRef(null);
   const fileRef = useRef(null);
+  const [fileUpload, setFileUpload] = useState({});
   const handleDelete = () => {
     // Show the confirmation dialog
     setIsDialogOpen(true);
@@ -84,34 +91,66 @@ export const CompanyCard = (props) => {
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
-
+  // Function to handle file upload
+  const handleFileUploadCompanies = (event) => {
+    const selectedFile = event.target.files[0];
+    setFileUpload(selectedFile);
+    // Handle the selected file, e.g., upload it to a server
+    console.log("Selected file:", selectedFile);
+    // Close the dialog after handling the file
+  };
   // Function to handle file upload (you can customize this based on your API)
   const handleFileUpload = async () => {
     // Perform file upload logic here
-    const title = titleRef.current.value;
-    // const file = fileRef.current.files[0];
 
-    try {
-      const response = await axios.put(
-        "https://gaca.somee.com/api/Stakeholder/Update",
-        {
-          id: company.id,
-          title: title,
-          imageUrl: company.imageUrl,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user}`,
+    // const file = fileRef.current.files[0];
+    if (checked) {
+      const formData = new FormData();
+      formData.append("file", fileUpload);
+      try {
+        const response = await axios.post(
+          `https://gaca.somee.com/api/Media/UploadFile/MediaType/stakeholder/Id/${company.id}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${user}`,
+            },
+          }
+        );
+
+        setImageUrl(response.data.returnData);
+        handleCloseDialog();
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      const titles = titleRef.current.value;
+      try {
+        const response = await axios.put(
+          "https://gaca.somee.com/api/Stakeholder/Update",
+          {
+            id: company.id,
+            title: titles,
+            imageUrl: company.imageUrl,
           },
-        }
-      );
-      handleCloseDialog();
-      console.log(response);
-    } catch (error) {
-      console.log(error);
+          {
+            headers: {
+              Authorization: `Bearer ${user}`,
+            },
+          }
+        );
+        setTitle(response.data.returnData.title);
+        console.log(response);
+        handleCloseDialog();
+      } catch (error) {
+        console.log(error);
+      }
     }
+
     // Make your PUT request with the title and file here
   };
+  const label = { inputProps: { "aria-label": "Switch demo" } };
   return (
     <Card
       sx={{
@@ -123,13 +162,30 @@ export const CompanyCard = (props) => {
       {/* Image Upload Dialog */}
       <>
         <Dialog open={openDialog} onClose={handleCloseDialog}>
-          <DialogTitle>Update for {company.title}</DialogTitle>
+          <DialogTitle>Update for {title}</DialogTitle>
           <DialogContent style={{ minWidth: "400px" }}>
             {/* Title input using useRef */}
-            <FormControl fullWidth margin="normal">
-              <InputLabel htmlFor="title-input">Title</InputLabel>
-              <Input id="title-input" type="text" inputRef={titleRef} />
-            </FormControl>
+            {checked ? (
+              <DialogContent>
+                {/* Input for file selection */}
+                <Input
+                  type="file"
+                  onChange={handleFileUploadCompanies}
+                  inputProps={{ accept: ".png, .jpg, .jpeg" }}
+                />
+              </DialogContent>
+            ) : (
+              <FormControl fullWidth margin="normal">
+                <InputLabel htmlFor="title-input">Title</InputLabel>
+                <Input id="title-input" type="text" inputRef={titleRef} />
+              </FormControl>
+            )}
+            <FormControlLabel
+              checked={checked}
+              onChange={() => setCheckd(!checked)}
+              control={<Switch name="antoine" />}
+              label="Upload Image"
+            />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseDialog} color="info">
@@ -166,14 +222,14 @@ export const CompanyCard = (props) => {
           }}
         >
           <img
-            src={`https://gaca.somee.com/${company.imageUrl}`}
+            src={`https://gaca.somee.com/${imageUrl}`}
             width={70}
             height={70}
             alt={company.title}
           />
         </Box>
         <Typography align="center" gutterBottom variant="h5">
-          {company.title}
+          {title}
         </Typography>
       </CardContent>
       <Stack

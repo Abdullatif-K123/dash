@@ -129,7 +129,7 @@ export const AuthProvider = (props) => {
           },
         }
       );
-
+      console.log(response.data);
       const user = response.data.returnData.token;
 
       dispatch({
