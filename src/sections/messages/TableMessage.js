@@ -82,19 +82,52 @@ const TableMessage = ({ order, DeleteItems }) => {
       <Dialog open={open} onClose={handleCloseDialog}>
         <DialogTitle>Feedback Details</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            <strong>Name:</strong> {order.name}
-            <br />
-            <strong>Email:</strong> {order.email}
-            <br />
-            <strong>Phone:</strong> {order.phone}
-            <br />
-            <strong>Feedback Type:</strong> {order.feedBackType}
-            <br />
-            <strong>Feedback Title:</strong> {order.feedBackTitle}
-            <br />
-            <strong>Feedback Message:</strong> {order.feedBackMessage}
-          </DialogContentText>
+          <Table>
+            <TableBody>
+              <TableRow>
+                <TableCell>
+                  <strong>Name:</strong>
+                </TableCell>
+                <TableCell>{order.name}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>
+                  <strong>Email:</strong>
+                </TableCell>
+                <TableCell>{order.email}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>
+                  <strong>Phone:</strong>
+                </TableCell>
+                <TableCell>{order.phone}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>
+                  <strong>Feedback Type:</strong>
+                </TableCell>
+                <TableCell>{feedBackType[order.feedBackType]}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>
+                  <strong>Feedback Title:</strong>
+                </TableCell>
+                <TableCell>{order.feedBackTitle}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+          <Table>
+            <TableBody>
+              <TableRow>
+                <TableCell>
+                  <strong>Feedback Message:</strong>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>{order.feedBackMessage}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseDialog} color="primary">

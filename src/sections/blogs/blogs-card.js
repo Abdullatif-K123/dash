@@ -16,6 +16,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
+import { Edit } from "@mui/icons-material";
 import DialogTitle from "@mui/material/DialogTitle";
 import { FormControl } from "@mui/material";
 import { Input } from "@mui/material";
@@ -23,6 +24,7 @@ import { InputLabel } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
 import parse from "html-react-parser";
+import { useRouter } from "next/router";
 export const BlogCard = (props) => {
   const [showFullContent, setShowFullContent] = useState(false);
   const { company } = props;
@@ -110,6 +112,7 @@ export const BlogCard = (props) => {
     }
     // Make your PUT request with the title and file here
   };
+  const router = useRouter();
   return (
     <Card
       sx={{
@@ -189,7 +192,7 @@ export const BlogCard = (props) => {
               <span
                 style={{ color: "#61affe", cursor: "pointer" }}
                 onClick={() => {
-                  setShowFullContent(!showFullContent);
+                  router.push(`blogs/${company.id}`);
                 }}
               >
                 Read-More
@@ -220,13 +223,13 @@ export const BlogCard = (props) => {
         sx={{ p: 2 }}
       >
         <Stack alignItems="center" direction="row" spacing={1}>
-          <Button variant="contained" color="info" onClick={handleOpenDialog}>
-            Update
-          </Button>
-        </Stack>
-        <Stack alignItems="center" direction="row" spacing={1}>
-          <Button variant="contained" color="error" onClick={handleDelete}>
-            Delete
+          <Button
+            variant="contained"
+            color="info"
+            startIcon={<Edit />}
+            onClick={() => router.push(`blogs/${company.id}`)}
+          >
+            Edit
           </Button>
         </Stack>
       </Stack>

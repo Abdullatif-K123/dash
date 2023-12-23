@@ -1,4 +1,4 @@
-import DocumentIcon from "@heroicons/react/24/solid/DocumentIcon";
+import DocumentIcon from "@heroicons/react/24/solid/PaperClipIcon";
 import {
   Button,
   Dialog,
@@ -19,7 +19,7 @@ import axios from "axios";
 import { useRef, useState } from "react";
 import { useAuth } from "src/hooks/use-auth";
 import React from "react";
-
+import TipTap from "../HomeAbout/TipTapEditor";
 const TablePlan = ({ customer, isSelected, handleRemove }) => {
   const { user } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -27,22 +27,21 @@ const TablePlan = ({ customer, isSelected, handleRemove }) => {
   const [currentId, setCurrentId] = useState("");
   const [currentName, setCurrentName] = useState("");
   const [docUrl, setdocUrl] = useState("");
+  const [desc, setDesc] = useState(customer.description);
+  const [title, setTitle] = useState("");
   const titleRef = useRef(customer.title);
-  //url Action download
-  function downloadPdf(url) {
-    const link = document.createElement("a");
-    link.href = url;
-    link.target = "_blank"; // Open in a new tab, optional
-    link.download = "document.pdf"; // Set the default download file name, optional
 
-    // Trigger a click on the link
-    document.body.appendChild(link);
-    link.click();
+  //Human readable date
+  const dateCreated = new Date(customer.dateCreated);
+  const dateUpdated = new Date(customer.dateUpdated);
+  const options = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
 
-    // Clean up the link element
-    document.body.removeChild(link);
-  }
-
+  const humanReadableDateCreated = dateCreated.toLocaleString("en-US", options);
+  const humanReadableDateUpdated = dateUpdated.toLocaleString("en-US", options);
   const handleDelete = (id) => {
     // Show the confirmation dialog
     setCurrentId(id);
@@ -123,20 +122,32 @@ const TablePlan = ({ customer, isSelected, handleRemove }) => {
   return (
     <TableRow hover selected={isSelected}>
       {/* Updating dialog  */}
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        fullScreen
+        style={{ maxWidth: "90%", left: "270px" }}
+      >
         <DialogTitle>Update for {currentName}</DialogTitle>
         <DialogContent style={{ minWidth: "400px" }}>
           {/* Title input using useRef */}
           <FormControl fullWidth margin="normal">
             <InputLabel htmlFor="title-input">Title</InputLabel>
-            <Input id="title-input" type="text" inputRef={titleRef} />
+            <Input
+              id="title-input"
+              type="text"
+              inputRef={titleRef}
+              style={{ marginBottom: "20px" }}
+            />
+            <label>Description</label>
+            <TipTap setDesc={setDesc} desc={desc} />
           </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog} color="info">
+          <Button onClick={handleCloseDialog} variant="contained" color="info">
             Cancel
           </Button>
-          <Button onClick={handleFileUpload} color="success" autoFocus>
+          <Button onClick={handleFileUpload} variant="contained" color="success" autoFocus>
             Confirm
           </Button>
         </DialogActions>
@@ -162,20 +173,14 @@ const TablePlan = ({ customer, isSelected, handleRemove }) => {
             {" "}
             <DocumentIcon />{" "}
           </SvgIcon>
-          <Typography
-            variant="subtitle2"
-            style={{ cursor: "pointer" }}
-            onClick={() => {
-              downloadPdf(`https://gaca.somee.com/${customer.imageUrl}`);
-            }}
-          >
+          <Typography variant="subtitle2" style={{ cursor: "pointer" }}>
             {customer.title}
           </Typography>
         </Stack>
       </TableCell>
       <TableCell> </TableCell>
-      <TableCell> </TableCell>
-      <TableCell></TableCell>
+      <TableCell>{humanReadableDateCreated}</TableCell>
+      <TableCell>{humanReadableDateUpdated}</TableCell>
       <TableCell>
         <Stack alignItems="center" direction="row" spacing={1}>
           <Button

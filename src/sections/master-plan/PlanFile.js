@@ -43,7 +43,7 @@ export const PlanFile = (props) => {
 
   const selectedSome = selected.length > 0 && selected.length < items.length;
   const selectedAll = items.length > 0 && selected.length === items.length;
-
+  console.log(items);
   return (
     <Card>
       {/* Delete dialog */}
@@ -56,8 +56,8 @@ export const PlanFile = (props) => {
                 <TableCell padding="checkbox"></TableCell>
                 <TableCell>Plan title</TableCell>
                 <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
+                <TableCell>CreatedAt</TableCell>
+                <TableCell>UpdatedAt</TableCell>
                 <TableCell>Action</TableCell>
               </TableRow>
             </TableHead>

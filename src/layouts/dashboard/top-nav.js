@@ -54,29 +54,22 @@ export const TopNav = (props) => {
           }}
         >
           <Stack alignItems="center" direction="row" spacing={2}>
-            {/* {!lgUp && (
+            {!lgUp && (
               <IconButton onClick={onNavOpen}>
                 <SvgIcon fontSize="small">
                   <Bars3Icon />
                 </SvgIcon>
               </IconButton>
             )}
-            <Tooltip title="d">
-              <IconButton>
-                <SvgIcon fontSize="small">
-                  <MagnifyingGlassIcon />
-                </SvgIcon>
-              </IconButton>
-            </Tooltip> */}
           </Stack>
           <Stack alignItems="center" direction="row" spacing={2}>
             <Tooltip title="Notifications">
               <IconButton>
-                {/* <Badge badgeContent={4} color="success" variant="dot">
+                <Badge badgeContent={4} color="success" variant="dot">
                   <SvgIcon fontSize="small">
                     <BellIcon />
                   </SvgIcon>
-                </Badge> */}
+                </Badge>
               </IconButton>
             </Tooltip>
             <Avatar
