@@ -42,6 +42,12 @@ const Page = () => {
   //Handle Search for
   const handleClose = () => {
     setIsDialogOpen(false);
+    setFormData({
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    });
   };
   //Making effect for users
   useEffect(() => {
