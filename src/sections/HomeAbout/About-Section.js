@@ -53,9 +53,17 @@ const AboutForm = ({ user, content, mission, vision }) => {
     event.preventDefault();
 
     try {
-      const response = await axios.put("https://gaca.somee.com/api/About/Update", formData, {
-        headers: { Authorization: `Bearer ${user}` },
-      });
+      const response = await axios.put(
+        "https://gaca.somee.com/api/About/Update",
+        {
+          content: about1,
+          vision: about2,
+          mission: about3,
+        },
+        {
+          headers: { Authorization: `Bearer ${user}` },
+        }
+      );
       handleClick();
       console.log(response.data); // Handle the response as needed
     } catch (error) {
@@ -76,7 +84,7 @@ const AboutForm = ({ user, content, mission, vision }) => {
           <Typography variant="h4" align="center" gutterBottom>
             About Update
           </Typography>
-          <form style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
             <InputLabel htmlFor="content">Content</InputLabel>
             <TipTap setDesc={setAbout1} desc={about1} />
             <InputLabel htmlFor="vision">Vision</InputLabel>
@@ -87,7 +95,7 @@ const AboutForm = ({ user, content, mission, vision }) => {
             <Button onClick={handleSubmit} type="submit" variant="contained" color="primary">
               Update
             </Button>
-          </form>
+          </div>
         </CardContent>
       </Card>
     </Container>
