@@ -23,15 +23,16 @@ import { useAuth } from "src/hooks/use-auth";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { CompanyCard } from "src/sections/companies/company-card";
 import { BlogCard } from "src/sections/blogs/blogs-card";
+import TipTap from "src/sections/HomeAbout/TipTapEditor";
 import { CompaniesSearch } from "src/sections/companies/companies-search";
 const Blogs = () => {
   const [apiData, setApiData] = useState([]);
   const { user } = useAuth();
   const [createdId, setCreatedId] = useState(null);
 
+  const [descText, setDescText] = useState("");
   const [open, setIsDialogOpen] = useState(false);
   const inputRef = useRef(null);
-  const descRef = useRef(null);
   //creating for add button
   const handleOpenDialog = () => {
     setIsDialogOpen(true);
@@ -46,14 +47,13 @@ const Blogs = () => {
     // Validate input fields if needed
     console.log(inputRef.current.value);
     const titleValue = inputRef.current.value;
-    const desc = descRef.current.value;
     // Pass the title and image URL to the parent component
     try {
       const response = await axios.post(
         "https://gaca.somee.com/api/Blog/Create",
         {
           title: titleValue,
-          description: desc,
+          description: descText,
           imageUrl: "nothinghere",
         },
         { headers: { Authorization: `Bearer ${user}` } }
@@ -192,16 +192,9 @@ const Blogs = () => {
                 type="text"
                 inputRef={inputRef}
                 fullWidth
+                style={{ marginBottom: "25px" }}
               />
-              <TextField
-                margin="dense"
-                id="description"
-                label="Description"
-                multiline
-                inputRef={descRef}
-                rows={4} // You can adjust the number of rows as needed
-                fullWidth
-              />
+              <TipTap setDesc={setDescText} desc={descText} />
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose} color="primary">

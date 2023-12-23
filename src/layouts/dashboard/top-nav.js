@@ -70,20 +70,13 @@ export const TopNav = (props) => {
             </Tooltip> */}
           </Stack>
           <Stack alignItems="center" direction="row" spacing={2}>
-            <Tooltip title="Contacts">
-              <IconButton>
-                <SvgIcon fontSize="small">
-                  <UsersIcon />
-                </SvgIcon>
-              </IconButton>
-            </Tooltip>
             <Tooltip title="Notifications">
               <IconButton>
-                <Badge badgeContent={4} color="success" variant="dot">
+                {/* <Badge badgeContent={4} color="success" variant="dot">
                   <SvgIcon fontSize="small">
                     <BellIcon />
                   </SvgIcon>
-                </Badge>
+                </Badge> */}
               </IconButton>
             </Tooltip>
             <Avatar
@@ -94,7 +87,7 @@ export const TopNav = (props) => {
                 height: 40,
                 width: 40,
               }}
-              src="/assets/avatars/avatar-anika-visser.png"
+              src=" "
             />
           </Stack>
         </Stack>

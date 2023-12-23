@@ -176,6 +176,15 @@ const Page = () => {
 
     fetchData();
   }, [user]);
+
+  //Seach Filter appyling
+  const [searchQuery, SetSearchQuery] = useState("");
+  const handleSearchChange = (e) => {
+    SetSearchQuery(e.target.value);
+  };
+  const filterData = apiData.filter((card) =>
+    card.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
   return (
     <>
       <Head>
@@ -251,10 +260,10 @@ const Page = () => {
                 </Button>
               </div>
             </Stack>
-            <CustomersSearch />
+            <CustomersSearch handleSearchChange={handleSearchChange} />
             <CustomersTable
-              count={apiData.length}
-              items={apiData}
+              count={filterData.length}
+              items={filterData}
               onDeselectAll={customersSelection.handleDeselectAll}
               onDeselectOne={customersSelection.handleDeselectOne}
               onPageChange={handlePageChange}
