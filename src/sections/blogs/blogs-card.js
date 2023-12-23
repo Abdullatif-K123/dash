@@ -22,7 +22,7 @@ import { Input } from "@mui/material";
 import { InputLabel } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
-
+import parse from "html-react-parser";
 export const BlogCard = (props) => {
   const [showFullContent, setShowFullContent] = useState(false);
   const { company } = props;
@@ -182,10 +182,10 @@ export const BlogCard = (props) => {
           display="flex"
         >
           {showFullContent ? (
-            <p>{company.description}</p>
+            <p>{parse(company.description)}</p>
           ) : (
             <p>
-              {company.description.slice(0, 150)}...
+              {parse(company.description.slice(0, 150))}...
               <span
                 style={{ color: "#61affe", cursor: "pointer" }}
                 onClick={() => {

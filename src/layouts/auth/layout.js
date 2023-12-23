@@ -2,12 +2,14 @@ import PropTypes from "prop-types";
 import NextLink from "next/link";
 import { Box, Typography, Unstable_Grid2 as Grid } from "@mui/material";
 import { Logo } from "src/components/logo";
-
+import { useRouter } from "next/router";
 // TODO: Change subtitle text
 
 export const Layout = (props) => {
+  let isAuthenticated = window.sessionStorage.getItem("authenticated") === "true";
   const { children } = props;
-
+  const router = useRouter();
+  if (isAuthenticated) router.replace("/");
   return (
     <Box
       component="main"

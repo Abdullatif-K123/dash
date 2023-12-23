@@ -79,7 +79,6 @@ export const AuthProvider = (props) => {
         type: HANDLERS.INITIALIZE,
         payload: user,
       });
-      router.replace("/");
     } else {
       router.push("/auth/login");
       dispatch({

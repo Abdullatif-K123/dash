@@ -11,7 +11,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 export default function CustomizedSnackbars({ type, message, open, handleClose }) {
   return (
     <Stack spacing={2} sx={{ width: "100%" }}>
-      <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
+      <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
         <Alert onClose={handleClose} severity={type} sx={{ width: "100%" }}>
           {message}
         </Alert>

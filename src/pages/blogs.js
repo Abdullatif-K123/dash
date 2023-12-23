@@ -180,10 +180,10 @@ const Blogs = () => {
       >
         <Container maxWidth="xl">
           {/* Title Dialog  */}
-          <Dialog open={open} onClose={handleClose}>
+          <Dialog fullWidth open={open} onClose={handleClose}>
             <DialogTitle>Add Button</DialogTitle>
             <DialogContent>
-              <DialogContentText>Please enter the details for the new button.</DialogContentText>
+              <DialogContentText>Please enter the details for the new blg.</DialogContentText>
               <TextField
                 autoFocus
                 margin="dense"
