@@ -30,7 +30,7 @@ const TablePlan = ({ customer, isSelected, handleRemove }) => {
   const [desc, setDesc] = useState(customer.description);
   const [title, setTitle] = useState("");
   const titleRef = useRef(customer.title);
-
+  console.log(customer, "I'm here");
   //Human readable date
   const dateCreated = new Date(customer.dateCreated);
   const dateUpdated = new Date(customer.dateUpdated);
@@ -99,11 +99,12 @@ const TablePlan = ({ customer, isSelected, handleRemove }) => {
 
     try {
       const response = await axios.put(
-        "https://gaca.somee.com/api/Document/Update",
+        "https://gaca.somee.com/api/Masterplancontext/Update",
         {
-          id: currentId,
+          id: customer.id,
           title: title,
-          imageUrl: docUrl,
+          description: desc,
+          masterPlanId: customer.masterPlanId,
         },
         {
           headers: {
