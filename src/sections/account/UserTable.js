@@ -9,10 +9,10 @@ import {
   Paper,
   IconButton,
 } from "@mui/material";
-
+import UserCell from "./UserCell";
 import { Delete } from "@mui/icons-material";
 import { Edit } from "@mui/icons-material";
-const UserTable = ({ data }) => {
+const UserTable = ({ data, handleRemove }) => {
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -40,22 +40,13 @@ const UserTable = ({ data }) => {
             const humanReadableDateCreated = dateCreated.toLocaleString("en-US", options);
             const humanReadableDateUpdated = dateUpdated.toLocaleString("en-US", options);
             return (
-              <TableRow key={item.id}>
-                <TableCell>{item.id}</TableCell>
-                <TableCell>{item.name}</TableCell>
-                <TableCell>{item.email}</TableCell>
-                <TableCell>{humanReadableDateCreated}</TableCell>
-                <TableCell>{humanReadableDateUpdated}</TableCell>
-                <TableCell>
-                  {/* Add your edit and delete functionality here */}
-                  <IconButton aria-label="edit">
-                    <Edit />
-                  </IconButton>
-                  <IconButton aria-label="delete">
-                    <Delete />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
+              <UserCell
+                key={item.id}
+                item={item}
+                DateCreate={humanReadableDateCreated}
+                DateUpdate={humanReadableDateUpdated}
+                handleRemove={handleRemove}
+              />
             );
           })}
         </TableBody>

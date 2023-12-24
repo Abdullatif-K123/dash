@@ -107,7 +107,11 @@ const Page = () => {
     }
     // Close the dialog
   };
-
+  //Handle remove stackholder
+  const handleRemove = (id) => {
+    const updateArray = apiData.filter((item) => item.id !== id);
+    setApiData(updateArray);
+  };
   return (
     <>
       <Head>
@@ -200,7 +204,7 @@ const Page = () => {
               </div>
               <Grid>
                 <Grid xs={12} md={6} lg={8}>
-                  <UserTable data={apiData} />
+                  <UserTable data={apiData} handleRemove={handleRemove} />
                 </Grid>
               </Grid>
             </div>

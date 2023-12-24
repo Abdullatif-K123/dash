@@ -84,7 +84,7 @@ const Page = () => {
         <Container maxWidth="xl">
           <Stack spacing={3}>
             <Stack direction="row" justifyContent="space-between" spacing={4}></Stack>
-            <CustomersSearch />
+            {/* <CustomersSearch /> */}
             <MessagesOverView data={apiData} />
           </Stack>
         </Container>
