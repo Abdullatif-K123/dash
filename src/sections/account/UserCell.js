@@ -26,6 +26,10 @@ const UserCell = ({ item, DateCreate, DateUpdate, handleRemove }) => {
   //creating for add button
   const handleOpenDialog = () => {
     setIsDialogOpenUpdate(true);
+    setFormData({
+      name: item.name,
+      email: item.email,
+    });
   };
 
   //Handle Search for

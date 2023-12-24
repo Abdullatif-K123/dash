@@ -28,9 +28,8 @@ const TablePlan = ({ customer, isSelected, handleRemove }) => {
   const [currentName, setCurrentName] = useState("");
   const [docUrl, setdocUrl] = useState("");
   const [desc, setDesc] = useState(customer.description);
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState(customer.title);
   const titleRef = useRef(customer.title);
-  console.log(customer, "I'm here");
   //Human readable date
   const dateCreated = new Date(customer.dateCreated);
   const dateUpdated = new Date(customer.dateUpdated);
@@ -82,7 +81,6 @@ const TablePlan = ({ customer, isSelected, handleRemove }) => {
     setCurrentName(name);
     setCurrentId(id);
     setdocUrl(url);
-    console.log(url);
     setOpenDialog(true);
   };
 
@@ -94,7 +92,7 @@ const TablePlan = ({ customer, isSelected, handleRemove }) => {
   // Function to handle file upload (you can customize this based on your API)
   const handleFileUpload = async () => {
     // Perform file upload logic here
-    const title = titleRef.current.value;
+
     // const file = fileRef.current.files[0];
 
     try {
@@ -113,7 +111,7 @@ const TablePlan = ({ customer, isSelected, handleRemove }) => {
         }
       );
       handleCloseDialog();
-      console.log(response);
+      customer.title = title;
     } catch (error) {
       console.log(error);
     }
@@ -138,6 +136,10 @@ const TablePlan = ({ customer, isSelected, handleRemove }) => {
               id="title-input"
               type="text"
               inputRef={titleRef}
+              value={title}
+              onChange={(e) => {
+                setTitle(e.target.value);
+              }}
               style={{ marginBottom: "20px" }}
             />
             <label>Description</label>
