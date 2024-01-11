@@ -1,8 +1,5 @@
 import { useCallback, useMemo, useState, useEffect, useRef } from "react";
 import Head from "next/head";
-import { subDays, subHours } from "date-fns";
-import ArrowDownOnSquareIcon from "@heroicons/react/24/solid/ArrowDownOnSquareIcon";
-import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import {
   Box,
@@ -29,6 +26,7 @@ import { useAuth } from "src/hooks/use-auth";
 import { useRouter } from "next/router";
 import { PlanFile } from "src/sections/master-plan/PlanFile";
 import TipTap from "src/sections/HomeAbout/TipTapEditor";
+import { API_ROUTES } from "src/utils/apiConfig";
 const now = new Date();
 
 let data = [];
@@ -93,7 +91,7 @@ const MasterPlan = () => {
     // Pass the title and image URL to the parent component
     try {
       const response = await axios.post(
-        "https://gaca.somee.com/api/Masterplancontext/Create",
+        API_ROUTES.masterPlanContext.post,
         {
           title: titleValue,
           description: descPlan,
@@ -141,14 +139,11 @@ const MasterPlan = () => {
     const fetchData = async () => {
       try {
         // Make your API request here
-        const response = await axios.get(
-          `https://gaca.somee.com/api/Masterplancontext/GetContextById/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${user}`,
-            },
-          }
-        );
+        const response = await axios.get(`${API_ROUTES.masterPlanContext.get}/${id}`, {
+          headers: {
+            Authorization: `Bearer ${user}`,
+          },
+        });
 
         setApiData(response.data.returnData);
 
@@ -161,7 +156,7 @@ const MasterPlan = () => {
     const fetchData2 = async () => {
       try {
         // Make your API request here
-        const response = await axios.get(`https://gaca.somee.com/api/Masterplan/GetData`, {
+        const response = await axios.get(API_ROUTES.masterPlan.get, {
           headers: {
             Authorization: `Bearer ${user}`,
           },
@@ -191,7 +186,7 @@ const MasterPlan = () => {
   const handleUpdate = async () => {
     try {
       const response = await axios.put(
-        `https://gaca.somee.com/api/Masterplan/Update`,
+        API_ROUTES.masterPlan.put,
         {
           id: id,
           title: masterTitle,

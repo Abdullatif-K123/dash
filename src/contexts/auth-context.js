@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useReducer, useRef } from "react"
 import PropTypes from "prop-types";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { API_ROUTES } from "src/utils/apiConfig";
 const HANDLERS = {
   INITIALIZE: "INITIALIZE",
   SIGN_IN: "SIGN_IN",
@@ -118,7 +119,7 @@ export const AuthProvider = (props) => {
   const signIn = async (email, password) => {
     try {
       const response = await axios.post(
-        "https://gaca.somee.com/api/Auth/Login",
+        API_ROUTES.auth.post,
         {
           emailAddress: email,
           password: password,

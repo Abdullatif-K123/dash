@@ -7,9 +7,11 @@ import {
   DialogContentText,
   DialogTitle,
   FormControl,
+  FormControlLabel,
   Input,
   InputLabel,
   SvgIcon,
+  Switch,
   TableCell,
   TableRow,
   Typography,
@@ -17,7 +19,7 @@ import {
 import { Stack } from "@mui/system";
 import React, { useRef, useState } from "react";
 import axios from "axios";
-
+import { API_ROUTES } from "src/utils/apiConfig";
 const DocumentCell = ({ customer, isSelected, formattedDate, handleRemove, user }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
@@ -25,7 +27,8 @@ const DocumentCell = ({ customer, isSelected, formattedDate, handleRemove, user 
   const [currentName, setCurrentName] = useState("");
   const [docUrl, setdocUrl] = useState("");
   const titleRef = useRef(null);
-
+  const [checked, setCheckd] = useState(false);
+  const [fileUpload, setFileUpload] = useState({});
   //url Action download
   function downloadPdf(url) {
     const link = document.createElement("a");
@@ -51,17 +54,13 @@ const DocumentCell = ({ customer, isSelected, formattedDate, handleRemove, user 
     // Handle the deletion logic here
     // ...
     try {
-      const response = await axios.delete(
-        `https://gaca.somee.com/api/Document/Delete/${currentId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${user}`,
-          },
-        }
-      );
+      const response = await axios.delete(`${API_ROUTES.document.delete}/${currentId}`, {
+        headers: {
+          Authorization: `Bearer ${user}`,
+        },
+      });
       setIsDialogOpen(false);
       handleRemove(currentId);
-      console.log(response);
     } catch (error) {
       console.log(error);
     }
@@ -73,14 +72,11 @@ const DocumentCell = ({ customer, isSelected, formattedDate, handleRemove, user 
     setIsDialogOpen(false);
   };
 
-  //update handler dialog soul
-
   // Function to handle opening the dialog
   const handleOpenDialog = (id, name, url) => {
     setCurrentName(name);
     setCurrentId(id);
     setdocUrl(url);
-    console.log(url);
     setOpenDialog(true);
   };
 
@@ -88,33 +84,56 @@ const DocumentCell = ({ customer, isSelected, formattedDate, handleRemove, user 
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
-
+  // Function to handle file upload
+  const handleFileUploadDoucments = (event) => {
+    const selectedFile = event.target.files[0];
+    setFileUpload(selectedFile);
+    // Handle the selected file, e.g., upload it to a server
+    console.log("Selected file:", selectedFile);
+  };
   // Function to handle file upload (you can customize this based on your API)
   const handleFileUpload = async () => {
-    // Perform file upload logic here
-    const title = titleRef.current.value;
     // const file = fileRef.current.files[0];
-    console.log(customer.imageUrl);
-    try {
-      const response = await axios.put(
-        "https://gaca.somee.com/api/Document/Update",
-        {
-          id: customer.id,
-          title: title,
-          imageUrl: customer.imageUrl,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user}`,
+    if (checked) {
+      const formData = new FormData();
+      formData.append("file", fileUpload);
+      console.log(formData);
+      try {
+        const response = await axios.post(
+          `${API_ROUTES.media.doucmentPost}/${customer.id}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${user}`,
+            },
+          }
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      try {
+        const title = titleRef.current.value;
+        const response = await axios.put(
+          API_ROUTES.document.put,
+          {
+            id: customer.id,
+            title: title,
+            imageUrl: customer.imageUrl,
           },
-        }
-      );
-      customer.title = title;
-      handleCloseDialog();
-      console.log(response);
-    } catch (error) {
-      console.log(error);
+          {
+            headers: {
+              Authorization: `Bearer ${user}`,
+            },
+          }
+        );
+        customer.title = title;
+      } catch (error) {
+        console.log(error);
+      }
     }
+    handleCloseDialog();
     // Make your PUT request with the title and file here
   };
 
@@ -124,17 +143,33 @@ const DocumentCell = ({ customer, isSelected, formattedDate, handleRemove, user 
       <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>Update for {currentName}</DialogTitle>
         <DialogContent style={{ minWidth: "400px" }}>
-          {/* Title input using useRef */}
-          <FormControl fullWidth margin="normal">
-            <InputLabel htmlFor="title-input">Title</InputLabel>
-            <Input id="title-input" type="text" inputRef={titleRef} />
-          </FormControl>
+          {checked ? (
+            <DialogContent>
+              {/* Input for file selection */}
+              <Input
+                type="file"
+                onChange={handleFileUploadDoucments}
+                inputProps={{ accept: ".pdf" }}
+              />
+            </DialogContent>
+          ) : (
+            <FormControl fullWidth margin="normal">
+              <InputLabel htmlFor="title-input">Title</InputLabel>
+              <Input id="title-input" type="text" inputRef={titleRef} />
+            </FormControl>
+          )}
+          <FormControlLabel
+            checked={checked}
+            onChange={() => setCheckd(!checked)}
+            control={<Switch name="antoine" />}
+            label="Upload Image"
+          />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog} color="info">
+          <Button onClick={handleCloseDialog} color="error">
             Cancel
           </Button>
-          <Button onClick={handleFileUpload} color="error" autoFocus>
+          <Button onClick={handleFileUpload} color="info" autoFocus>
             Confirm
           </Button>
         </DialogActions>
@@ -164,7 +199,7 @@ const DocumentCell = ({ customer, isSelected, formattedDate, handleRemove, user 
             variant="subtitle2"
             style={{ cursor: "pointer" }}
             onClick={() => {
-              downloadPdf(`https://gaca.somee.com/${customer.imageUrl}`);
+              downloadPdf(`${API_ROUTES.domainName}/${customer.imageUrl}`);
             }}
           >
             {customer.title}

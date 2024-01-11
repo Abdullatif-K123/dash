@@ -1,7 +1,5 @@
 import Head from "next/head";
 import { useEffect, useRef, useState } from "react";
-import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
-import ArrowDownOnSquareIcon from "@heroicons/react/24/solid/ArrowDownOnSquareIcon";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import axios from "axios";
 import {
@@ -25,6 +23,7 @@ import { useAuth } from "src/hooks/use-auth";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { CompanyCard } from "src/sections/companies/company-card";
 import { CompaniesSearch } from "src/sections/companies/companies-search";
+import { API_ROUTES } from "src/utils/apiConfig";
 const Page = () => {
   const [apiData, setApiData] = useState([]);
   const { user } = useAuth();
@@ -50,7 +49,7 @@ const Page = () => {
     // Pass the title and image URL to the parent component
     try {
       const response = await axios.post(
-        "https://gaca.somee.com/api/Stakeholder/Create",
+        API_ROUTES.stakeholder.post,
         {
           title: titleValue,
           imageUrl: "nothinghere",
@@ -104,7 +103,7 @@ const Page = () => {
     formData.append("file", fileUpload);
     try {
       const response = await axios.post(
-        `https://gaca.somee.com/api/Media/UploadFile/MediaType/stakeholder/Id/${createdId}`,
+        `${API_ROUTES.media.StakeholderPost}/${createdId}`,
         formData,
         {
           headers: {
@@ -115,14 +114,11 @@ const Page = () => {
       );
       try {
         // Make your API request here
-        const response = await axios.get(
-          "https://gaca.somee.com/api/Stakeholder/GetAllPagination",
-          {
-            headers: {
-              Authorization: `Bearer ${user}`,
-            },
-          }
-        );
+        const response = await axios.get(API_ROUTES.stakeholder.getAll, {
+          headers: {
+            Authorization: `Bearer ${user}`,
+          },
+        });
 
         setApiData(response.data.data);
         // Update the component state with the fetched data
@@ -143,18 +139,16 @@ const Page = () => {
     card.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
   useEffect(() => {
+    let response = "";
     const fetchData = async () => {
       try {
         // Make your API request here
-        const response = await axios.get(
-          "https://gaca.somee.com/api/Stakeholder/GetAllPagination",
-          {
-            headers: {
-              Authorization: `Bearer ${user}`,
-            },
-          }
-        );
-        console.log(response.data);
+        response = await axios.get(API_ROUTES.stakeholder.getAll, {
+          headers: {
+            Authorization: `Bearer ${user}`,
+          },
+        });
+
         setApiData(response.data.data);
         // Update the component state with the fetched data
       } catch (error) {

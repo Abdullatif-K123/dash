@@ -25,6 +25,7 @@ import { useState } from "react";
 import axios from "axios";
 import parse from "html-react-parser";
 import { useRouter } from "next/router";
+import { API_ROUTES } from "src/utils/apiConfig";
 export const BlogCard = (props) => {
   const [showFullContent, setShowFullContent] = useState(false);
   const { company } = props;
@@ -54,7 +55,7 @@ export const BlogCard = (props) => {
     // Handle the deletion logic here
     // ...
     try {
-      const response = await axios.delete(`https://gaca.somee.com/api/Blog/Delete/${company.id}`, {
+      const response = await axios.delete(`${API_ROUTES.blogs.delete}/${company.id}`, {
         headers: {
           Authorization: `Bearer ${user}`,
         },
@@ -93,7 +94,7 @@ export const BlogCard = (props) => {
 
     try {
       const response = await axios.put(
-        "https://gaca.somee.com/api/Stakeholder/Update",
+        API_ROUTES.blogs.put,
         {
           id: company.id,
           title: title,
@@ -167,7 +168,7 @@ export const BlogCard = (props) => {
           }}
         >
           <img
-            src={`https://gaca.somee.com/${company.imageUrl}`}
+            src={`${API_ROUTES.domainName}/${company.imageUrl}`}
             width={350}
             height={200}
             alt={company.title}

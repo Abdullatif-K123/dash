@@ -15,6 +15,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useAuth } from "src/hooks/use-auth";
 import CustomizedSnackbars from "src/components/Snackbar";
+import { API_ROUTES } from "src/utils/apiConfig";
 const UserCell = ({ item, DateCreate, DateUpdate, handleRemove }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [open, setIsDialogOpenUpdate] = useState(false);
@@ -53,7 +54,7 @@ const UserCell = ({ item, DateCreate, DateUpdate, handleRemove }) => {
     e.preventDefault();
     try {
       const response = await axios.put(
-        "https://gaca.somee.com/api/User/Update",
+        API_ROUTES.user.put,
         {
           id: item.id,
           name: formData.name.length ? formData.name : item.name,
@@ -81,7 +82,7 @@ const UserCell = ({ item, DateCreate, DateUpdate, handleRemove }) => {
     // Handle the deletion logic here
     // ...
     try {
-      const response = await axios.delete(`https://gaca.somee.com/api/User/Delete/${item.id}`, {
+      const response = await axios.delete(`${API_ROUTES.user.delete}/${item.id}`, {
         headers: {
           Authorization: `Bearer ${user}`,
         },

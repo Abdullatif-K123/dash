@@ -25,6 +25,7 @@ import { CompanyCard } from "src/sections/companies/company-card";
 import { BlogCard } from "src/sections/blogs/blogs-card";
 import TipTap from "src/sections/HomeAbout/TipTapEditor";
 import { CompaniesSearch } from "src/sections/companies/companies-search";
+import { API_ROUTES } from "src/utils/apiConfig";
 const Blogs = () => {
   const [apiData, setApiData] = useState([]);
   const { user } = useAuth();
@@ -50,7 +51,7 @@ const Blogs = () => {
     // Pass the title and image URL to the parent component
     try {
       const response = await axios.post(
-        "https://gaca.somee.com/api/Blog/Create",
+        API_ROUTES.blogs.post,
         {
           title: titleValue,
           description: descText,
@@ -104,19 +105,15 @@ const Blogs = () => {
     const formData = new FormData();
     formData.append("file", fileUpload);
     try {
-      const response = await axios.post(
-        `https://gaca.somee.com/api/Media/UploadFile/MediaType/blog/Id/${createdId}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${user}`,
-          },
-        }
-      );
+      const response = await axios.post(`${API_ROUTES.media.BlogPost}/${createdId}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${user}`,
+        },
+      });
       try {
         // Make your API request here
-        const response = await axios.get("https://gaca.somee.com/api/Blog/GetAllPagination", {
+        const response = await axios.get(API_ROUTES.blogs.getAll, {
           headers: {
             Authorization: `Bearer ${user}`,
           },
@@ -144,7 +141,7 @@ const Blogs = () => {
     const fetchData = async () => {
       try {
         // Make your API request here
-        const response = await axios.get("https://gaca.somee.com/api/Blog/GetAllPagination", {
+        const response = await axios.get(API_ROUTES.blogs.getAll, {
           headers: {
             Authorization: `Bearer ${user}`,
           },

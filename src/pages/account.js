@@ -22,6 +22,7 @@ import { AccountProfileDetails } from "src/sections/account/account-profile-deta
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import UserTable from "src/sections/account/UserTable";
 import { useRef, useState, useEffect } from "react";
+import { API_ROUTES } from "src/utils/apiConfig";
 const Page = () => {
   const { user } = useAuth();
   const [open, setIsDialogOpen] = useState(false);
@@ -54,7 +55,7 @@ const Page = () => {
     const fetchData = async () => {
       try {
         // Make your API request here
-        const response = await axios.get("https://gaca.somee.com/api/User/GetAllPagination", {
+        const response = await axios.get(API_ROUTES.user.getAll, {
           headers: {
             Authorization: `Bearer ${user}`,
           },
@@ -88,7 +89,7 @@ const Page = () => {
       // Pass the title and image URL to the parent component
       try {
         const response = await axios.post(
-          "https://gaca.somee.com/api/User/Create",
+          API_ROUTES.user.post,
           {
             name: formData.name,
             email: formData.email,

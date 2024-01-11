@@ -1,8 +1,5 @@
 import { useCallback, useMemo, useState, useEffect, useRef } from "react";
 import Head from "next/head";
-import { subDays, subHours } from "date-fns";
-import ArrowDownOnSquareIcon from "@heroicons/react/24/solid/ArrowDownOnSquareIcon";
-import ArrowUpOnSquareIcon from "@heroicons/react/24/solid/ArrowUpOnSquareIcon";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import { Box, Button, Container, Stack, SvgIcon, Typography, Input } from "@mui/material";
 import { useSelection } from "src/hooks/use-selection";
@@ -18,6 +15,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
 import { useAuth } from "src/hooks/use-auth";
+import { API_ROUTES } from "src/utils/apiConfig";
 const now = new Date();
 
 let data = [];
@@ -45,34 +43,29 @@ const Page = () => {
   const [createdId, setCreatedId] = useState(null);
   const inputRef = useRef(null);
   const { user } = useAuth();
-
-  //Creating Dialogs for adding a new documents
-
   //creating for add button
   const handleOpenDialog = () => {
     setIsDialogOpen(true);
   };
 
-  //Handle Search for
+  //Handle Search for Documents
   const handleClose = () => {
     setIsDialogOpen(false);
   };
 
   const handleCreateButton = async () => {
     // Validate input fields if needed
-    console.log(inputRef.current.value);
     const titleValue = inputRef.current.value;
     // Pass the title and image URL to the parent component
     try {
       const response = await axios.post(
-        "https://gaca.somee.com/api/Document/Create",
+        API_ROUTES.document.post,
         {
           title: titleValue,
           imageUrl: "nothinghere",
         },
         { headers: { Authorization: `Bearer ${user}` } }
       );
-      console.log(response);
 
       const idHolder = response.data.returnData.id;
       setCreatedId(idHolder);
@@ -104,7 +97,6 @@ const Page = () => {
     const selectedFile = event.target.files[0];
     setFileUpload(selectedFile);
     // Handle the selected file, e.g., upload it to a server
-    console.log("Selected file:", selectedFile);
     // Close the dialog after handling the file
   };
   //Handle remove stackholder
@@ -114,23 +106,18 @@ const Page = () => {
   };
   //Function to handle submitting file
   const handleFileSubmit = async () => {
-    console.log(fileUpload);
     const formData = new FormData();
     formData.append("file", fileUpload);
     try {
-      const response = await axios.post(
-        `https://gaca.somee.com/api/Media/UploadFile/MediaType/ducoment/Id/${createdId}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${user}`,
-          },
-        }
-      );
+      const response = await axios.post(`${API_ROUTES.media.doucmentPost}/${createdId}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${user}`,
+        },
+      });
       try {
         // Make your API request here
-        const response = await axios.get("https://gaca.somee.com/api/Document/GetAllPagination", {
+        const response = await axios.get(API_ROUTES.document.getAll, {
           headers: {
             Authorization: `Bearer ${user}`,
           },
@@ -159,15 +146,13 @@ const Page = () => {
     const fetchData = async () => {
       try {
         // Make your API request here
-        const response = await axios.get("https://gaca.somee.com/api/Document/GetAllPagination", {
+        const response = await axios.get(API_ROUTES.document.getAll, {
           headers: {
             Authorization: `Bearer ${user}`,
           },
         });
-        console.log(response.data);
         setApiData(response.data.data);
         data = response.data.data;
-        console.log(data);
         // Update the component state with the fetched data
       } catch (error) {
         console.log(error);

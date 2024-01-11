@@ -8,6 +8,7 @@ import { CustomersSearch } from "src/sections/customer/customers-search";
 import { applyPagination } from "src/utils/apply-pagination";
 import { MessagesOverView } from "src/sections/messages/MessagesOverView";
 import { useAuth } from "src/hooks/use-auth";
+import { API_ROUTES } from "src/utils/apiConfig";
 import axios from "axios";
 const now = new Date();
 const data = [];
@@ -31,7 +32,7 @@ const Page = () => {
     const fetchData = async () => {
       try {
         // Make your API request here
-        const response = await axios.get("https://gaca.somee.com/api/Message/GetAllPagination", {
+        const response = await axios.get(API_ROUTES.message.getAll, {
           headers: {
             Authorization: `Bearer ${user}`,
           },

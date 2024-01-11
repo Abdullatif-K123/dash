@@ -20,6 +20,8 @@ import { useRef, useState } from "react";
 import { useAuth } from "src/hooks/use-auth";
 import React from "react";
 import TipTap from "../HomeAbout/TipTapEditor";
+
+import { API_ROUTES } from "src/utils/apiConfig";
 const TablePlan = ({ customer, isSelected, handleRemove }) => {
   const { user } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -52,14 +54,11 @@ const TablePlan = ({ customer, isSelected, handleRemove }) => {
 
     // ...
     try {
-      const response = await axios.delete(
-        `https://gaca.somee.com/api/Masterplancontext/Delete/${currentId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${user}`,
-          },
-        }
-      );
+      const response = await axios.delete(`${API_ROUTES.masterPlanContext.delete}/${currentId}`, {
+        headers: {
+          Authorization: `Bearer ${user}`,
+        },
+      });
       setIsDialogOpen(false);
       handleRemove(currentId);
       console.log(response);
@@ -97,7 +96,7 @@ const TablePlan = ({ customer, isSelected, handleRemove }) => {
 
     try {
       const response = await axios.put(
-        "https://gaca.somee.com/api/Masterplancontext/Update",
+        API_ROUTES.masterPlanContext.put,
         {
           id: customer.id,
           title: title,

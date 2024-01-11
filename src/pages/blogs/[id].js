@@ -20,6 +20,7 @@ import TipTap from "src/sections/HomeAbout/TipTapEditor";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { Box } from "@mui/system";
 import CustomizedSnackbars from "src/components/Snackbar";
+import { API_ROUTES } from "src/utils/apiConfig";
 const EditableCard = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -52,7 +53,7 @@ const EditableCard = () => {
     // Handle the deletion logic here
     // ...
     try {
-      const response = await axios.delete(`https://gaca.somee.com/api/Blog/Delete/${id}`, {
+      const response = await axios.delete(`${API_ROUTES.blogs.delete}/${id}`, {
         headers: {
           Authorization: `Bearer ${user}`,
         },
@@ -85,7 +86,7 @@ const EditableCard = () => {
   const handleupdateBolg = async () => {
     try {
       const response = await axios.put(
-        "https://gaca.somee.com/api/Blog/Update",
+        API_ROUTES.blogs.put,
         {
           id: id,
           title: title,
@@ -107,7 +108,7 @@ const EditableCard = () => {
     const fetchData = async () => {
       try {
         // Make your API request here
-        const response = await axios.get(`https://gaca.somee.com/api/Blog/GetById/${id}`, {
+        const response = await axios.get(`${API_ROUTES.blogs.get}/${id}`, {
           headers: {
             Authorization: `Bearer ${user}`,
           },
@@ -154,16 +155,12 @@ const EditableCard = () => {
     const formData = new FormData();
     formData.append("file", fileUpload);
     try {
-      const response = await axios.post(
-        `https://gaca.somee.com/api/Media/UploadFile/MediaType/blog/Id/${id}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${user}`,
-          },
-        }
-      );
+      const response = await axios.post(`${API_ROUTES.media.BlogPost}/${id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${user}`,
+        },
+      });
       handleClick();
       setImage(response.data.returnData);
     } catch (error) {
@@ -193,7 +190,7 @@ const EditableCard = () => {
           alt="Card Image"
           className="cardMedia"
           style={{ height: "350px", objectFit: "cover" }}
-          image={`https://gaca.somee.com/${image}`}
+          image={`${API_ROUTES.domainName}/${image}`}
           onClick={handleOpenUploadDialog}
         />
         <Typography className="editOverlay">Edit</Typography>

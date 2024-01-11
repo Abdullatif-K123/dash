@@ -22,6 +22,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import axios from "axios";
 import { useAuth } from "src/hooks/use-auth";
+import { API_ROUTES } from "src/utils/apiConfig";
 const statusMap = {
   pending: "warning",
   delivered: "success",
@@ -38,7 +39,7 @@ const TableMessage = ({ order, DeleteItems }) => {
     setOpenDialog(true);
     try {
       // Make your API request here
-      const response = await axios.get(`https://gaca.somee.com/api/Message/GetById/${order.id}`, {
+      const response = await axios.get(`${API_ROUTES.message.get}/${order.id}`, {
         headers: {
           Authorization: `Bearer ${user}`,
         },
@@ -62,7 +63,7 @@ const TableMessage = ({ order, DeleteItems }) => {
     handleCloseDialog();
     try {
       // Make your API request here
-      const response = await axios.delete(`https://gaca.somee.com/api/Message/Delete/${order.id}`, {
+      const response = await axios.delete(`${API_ROUTES.message.delete}/${order.id}`, {
         headers: {
           Authorization: `Bearer ${user}`,
         },

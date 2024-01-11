@@ -1,8 +1,6 @@
 import PropTypes from "prop-types";
 import { useRef } from "react";
-import Image from "next/image";
 import {
-  Avatar,
   Box,
   Card,
   CardContent,
@@ -23,9 +21,8 @@ import { FormControl } from "@mui/material";
 import { Input } from "@mui/material";
 import { InputLabel } from "@mui/material";
 import { useState } from "react";
-
 import axios from "axios";
-
+import { API_ROUTES } from "src/utils/apiConfig";
 export const CompanyCard = (props) => {
   const { company } = props;
   const { user } = props;
@@ -58,14 +55,11 @@ export const CompanyCard = (props) => {
     // Handle the deletion logic here
     // ...
     try {
-      const response = await axios.delete(
-        `https://gaca.somee.com/api/Stakeholder/Delete/${company.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${user}`,
-          },
-        }
-      );
+      const response = await axios.delete(`${API_ROUTES.stakeholder.delete}/${company.id}`, {
+        headers: {
+          Authorization: `Bearer ${user}`,
+        },
+      });
       setIsDialogOpen(false);
       props.handleRemove(company.id);
       console.log(response);
@@ -109,7 +103,7 @@ export const CompanyCard = (props) => {
       formData.append("file", fileUpload);
       try {
         const response = await axios.post(
-          `https://gaca.somee.com/api/Media/UploadFile/MediaType/stakeholder/Id/${company.id}`,
+          `${API_ROUTES.media.StakeholderPost}/${company.id}`,
           formData,
           {
             headers: {
@@ -128,7 +122,7 @@ export const CompanyCard = (props) => {
       const titles = titleRef.current.value;
       try {
         const response = await axios.put(
-          "https://gaca.somee.com/api/Stakeholder/Update",
+          API_ROUTES.stakeholder.put,
           {
             id: company.id,
             title: titles,
@@ -222,9 +216,9 @@ export const CompanyCard = (props) => {
           }}
         >
           <img
-            src={`https://gaca.somee.com/${imageUrl}`}
-            width={70}
-            height={70}
+            src={`${API_ROUTES.domainName}/${imageUrl}`}
+            width={120}
+            height={120}
             alt={company.title}
           />
         </Box>

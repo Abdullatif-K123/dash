@@ -7,7 +7,7 @@ import { AccountProfileDetails } from "src/sections/account/account-profile-deta
 import HomeForm from "src/sections/HomeAbout/Home-Section";
 import AboutForm from "src/sections/HomeAbout/About-Section";
 import axios from "axios";
-
+import { API_ROUTES } from "src/utils/apiConfig";
 import { useAuth } from "src/hooks/use-auth";
 const HomePage = () => {
   const [homeData, setHomeData] = useState({});
@@ -17,7 +17,7 @@ const HomePage = () => {
     const fetchData = async () => {
       try {
         // Make your API request here
-        const response = await axios.get("https://gaca.somee.com/api/Home/GetData", {
+        const response = await axios.get(API_ROUTES.home.get, {
           headers: { Authorization: `Bearer ${user}` },
         });
 

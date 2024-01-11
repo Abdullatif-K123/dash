@@ -13,6 +13,7 @@ import {
 import axios from "axios";
 import CustomizedSnackbars from "src/components/Snackbar";
 import TipTap from "./TipTapEditor";
+import { API_ROUTES } from "src/utils/apiConfig";
 const HomeForm = ({ title, desc, user }) => {
   const [open, setOpen] = React.useState(false);
   const [descs, setDesc] = useState("");
@@ -47,7 +48,7 @@ const HomeForm = ({ title, desc, user }) => {
     event.preventDefault();
     formData.description = descs;
     try {
-      const response = await axios.put("https://gaca.somee.com/api/Home/Update", formData, {
+      const response = await axios.put(API_ROUTES.home.put, formData, {
         headers: { Authorization: `Bearer ${user}` },
       });
       handleClick();

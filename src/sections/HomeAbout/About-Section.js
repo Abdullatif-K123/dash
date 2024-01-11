@@ -13,6 +13,7 @@ import {
 import axios from "axios";
 import CustomizedSnackbars from "src/components/Snackbar";
 import TipTap from "./TipTapEditor";
+import { API_ROUTES } from "src/utils/apiConfig";
 const AboutForm = ({ user, content, mission, vision }) => {
   const [open, setOpen] = React.useState(false);
   const [about1, setAbout1] = useState(content);
@@ -54,7 +55,7 @@ const AboutForm = ({ user, content, mission, vision }) => {
 
     try {
       const response = await axios.put(
-        "https://gaca.somee.com/api/About/Update",
+        API_ROUTES.about.put,
         {
           content: about1,
           vision: about2,
