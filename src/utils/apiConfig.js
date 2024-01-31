@@ -2,7 +2,11 @@ export const API_ROUTES = {
   domainName: "https://gaca.somee.com",
   auth: {
     post: "https://gaca.somee.com/api/Auth/Login",
+    forgetOtp: "https://gaca.somee.com/api/Auth/ForgetPasswordOTP",
+    forgetPass: "https://gaca.somee.com/api/Auth/ForgetPassword",
+    resetPass: "https://gaca.somee.com/api/Auth/ResetPassword",
   },
+
   user: {
     getAll: "https://gaca.somee.com/api/User/GetAllPagination",
     post: "https://gaca.somee.com/api/User/Create",

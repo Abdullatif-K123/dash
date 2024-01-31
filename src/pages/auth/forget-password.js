@@ -5,43 +5,32 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import classes from "./login.module.css";
 import Image from "next/image";
-import {
-  Alert,
-  Box,
-  Button,
-  Checkbox,
-  FormHelperText,
-  InputLabel,
-  Link,
-  Stack,
-  Tab,
-  Tabs,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, InputLabel, Link, Stack, TextField, Typography } from "@mui/material";
+import { ArrowLeftSharp } from "@mui/icons-material";
 import { useAuth } from "src/hooks/use-auth";
-import { Layout as AuthLayout } from "src/layouts/auth/layout";
 
-const Page = () => {
+const ForgetPassword = () => {
   const router = useRouter();
   const auth = useAuth();
   const [method, setMethod] = useState("email");
-  const [rememberMe, setRememberMe] = useState(false);
+  const [error, setError] = useState("");
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
       submit: null,
-      rememberMe: false,
     },
     validationSchema: Yup.object({
       email: Yup.string().email("Must be a valid email").max(255).required("Email is required"),
-      password: Yup.string().max(255).required("Password is required"),
     }),
     onSubmit: async (values, helpers) => {
       try {
-        await auth.signIn(values.email, values.password);
-        router.push("/");
+        console.log("I'm here");
+        const value = await auth.forgetPass(values.email);
+        setError(value);
+        if (!value.length) {
+          router.push("/auth/otp");
+        }
       } catch (err) {
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });
@@ -57,7 +46,7 @@ const Page = () => {
   return (
     <>
       <Head>
-        <title>Login | Gaca</title>
+        <title>Forget-Password | Gaca</title>
       </Head>
       <Box
         sx={{
@@ -106,19 +95,19 @@ const Page = () => {
                 variant="p"
                 sx={{ color: "#566a7f", fontSize: "1.375rem", fontWeight: "500" }}
               >
-                Welcome to GACA !{" "}
+                Forget Password?{" "}
               </Typography>
               <Typography variant="p" sx={{ color: "#8290a1", fontSize: "14px" }}>
-                Please sign-in to your account and start the adventure
+                Enter your email, and we&apos;ll send you instructions to reset your password
               </Typography>
             </Stack>
 
             <form noValidate onSubmit={formik.handleSubmit}>
-              <Stack spacing={0}>
+              <Stack spacing={1}>
                 <InputLabel htmlFor="email">Email</InputLabel>
 
                 <TextField
-                  error={!!(formik.touched.email && formik.errors.email)}
+                  error={!!(formik.touched.email && formik.errors.email) || error?.length}
                   fullWidth
                   hiddenLabel
                   helperText={formik.touched.email && formik.errors.email}
@@ -129,38 +118,7 @@ const Page = () => {
                   value={formik.values.email}
                   className={classes.filed}
                 />
-                <div className={classes.passowrdFroget}>
-                  <InputLabel htmlFor="Password">Password</InputLabel>
-
-                  <Link href="/auth/forget-password" style={{ textDecoration: "none" }}>
-                    <p className={classes.forgetPass}>Forget Password?</p>
-                  </Link>
-                </div>
-                <TextField
-                  error={!!(formik.touched.password && formik.errors.password)}
-                  fullWidth
-                  helperText={formik.touched.password && formik.errors.password}
-                  name="password"
-                  onBlur={formik.handleBlur}
-                  onChange={formik.handleChange}
-                  type="password"
-                  value={formik.values.password}
-                  hiddenLabel
-                />
-                {/* Remember Me Checkbox */}
-                <Stack direction="row" alignItems="center" spacing={-1}>
-                  <Checkbox
-                    name="rememberMe"
-                    checked={rememberMe}
-                    onChange={() => {
-                      setRememberMe(!rememberMe);
-                    }}
-                    color="primary"
-                  />
-                  <Typography variant="body2" sx={{ color: "darkgray" }}>
-                    Remember Me
-                  </Typography>
-                </Stack>
+                <p className={classes.error}>{error}</p>
               </Stack>
 
               {formik.errors.submit && (
@@ -168,10 +126,22 @@ const Page = () => {
                   {formik.errors.submit}
                 </Typography>
               )}
-              <Button fullWidth size="large" sx={{ mt: 3 }} type="submit" variant="contained">
-                Continue
+              <Button fullWidth size="large" sx={{ mt: 2 }} type="submit" variant="contained">
+                Send Reset Link
               </Button>
             </form>
+            <Link
+              href="/auth/login"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: "10px",
+                textDecoration: "none",
+              }}
+            >
+              <ArrowLeftSharp /> Back to log in
+            </Link>
           </div>
         </Box>
       </Box>
@@ -179,4 +149,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default ForgetPassword;

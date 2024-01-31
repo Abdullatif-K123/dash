@@ -6,6 +6,8 @@ import { API_ROUTES } from "src/utils/apiConfig";
 const HANDLERS = {
   INITIALIZE: "INITIALIZE",
   SIGN_IN: "SIGN_IN",
+  FORGET_PASS: "FORGET_PASS",
+  FOGET_PASSOTP: "FORGET_PASSOTP",
   SIGN_OUT: "SIGN_OUT",
 };
 
@@ -13,12 +15,13 @@ const initialState = {
   isAuthenticated: false,
   isLoading: true,
   user: null,
+  email: "",
 };
 
 const handlers = {
   [HANDLERS.INITIALIZE]: (state, action) => {
     const user = action.payload;
-
+    const email = action.payloadEmail;
     return {
       ...state,
       ...// if payload (user) is provided, then is authenticated
@@ -31,15 +34,18 @@ const handlers = {
         : {
             isLoading: false,
           }),
+      email: email || "",
     };
   },
   [HANDLERS.SIGN_IN]: (state, action) => {
-    const user = action.payload;
-
+    const user = typeof action.payload === "object" ? action.payload.user : action.payload;
+    const email = action.payload.email;
+    console.log(action);
     return {
       ...state,
       isAuthenticated: true,
       user,
+      email: email || "",
     };
   },
   [HANDLERS.SIGN_OUT]: (state) => {
@@ -63,7 +69,7 @@ export const AuthProvider = (props) => {
   const router = useRouter();
   const [state, dispatch] = useReducer(reducer, initialState);
   const initialized = useRef(false);
-
+  console.log(state);
   const initialize = async () => {
     initialized.current = true;
 
@@ -81,7 +87,6 @@ export const AuthProvider = (props) => {
         payload: user,
       });
     } else {
-      router.push("/auth/login");
       dispatch({
         type: HANDLERS.INITIALIZE,
       });
@@ -115,7 +120,68 @@ export const AuthProvider = (props) => {
       payload: user,
     });
   };
+  const forgetOtp = async (otp, token) => {
+    try {
+      const response = await axios.post(
+        API_ROUTES.auth.forgetOtp,
+        { token: token, otp: otp },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      dispatch({
+        type: HANDLERS.SIGN_IN,
+        payload: { user: response.data.returnData.token, email: state.email },
+      });
+      return "";
+    } catch (error) {
+      return error.response.data.errorMessage;
+    }
+  };
+  const resetPass = async (newPass, confirmPass, token) => {
+    try {
+      const response = await axios.post(
+        API_ROUTES.auth.resetPass,
+        {
+          token: token,
+          newPassword: newPass,
+          confirmPassword: confirmPass,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response.data);
+    } catch (error) {}
+  };
+  const forgetPass = async (email) => {
+    try {
+      const response = await axios.post(
+        API_ROUTES.auth.forgetPass,
+        { emailAddress: email },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const user = response.data.returnData.token;
 
+      console.log(response.data.returnData.token);
+      dispatch({
+        type: HANDLERS.SIGN_IN,
+        payload: { user: response.data.returnData.token, email: email },
+      });
+      return "";
+    } catch (error) {
+      console.log(error.response.data.errorMessage);
+      return error.response.data.errorMessage;
+    }
+  };
   const signIn = async (email, password) => {
     try {
       const response = await axios.post(
@@ -164,6 +230,9 @@ export const AuthProvider = (props) => {
         skip,
         signIn,
         signUp,
+        forgetPass,
+        forgetOtp,
+        resetPass,
         signOut,
       }}
     >

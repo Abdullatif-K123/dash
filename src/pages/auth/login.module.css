@@ -1,0 +1,106 @@
+.backgroundTop {
+  position: absolute;
+  top: 20px;
+  left: 32%;
+  z-index: 2;
+}
+.backgroundBottom {
+  position: absolute;
+  bottom: 20px;
+  right: 32%;
+  z-index: 2;
+}
+.heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.heading > h2 {
+  color: #556271;
+  font-size: 1.75rem;
+  font-weight: 900 !important;
+}
+.passowrdFroget {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.forgetPass {
+  font-size: 0.79rem;
+  color: #787bff;
+}
+.bro > input {
+  padding-bottom: 0px !important;
+}
+.error {
+  font-size: 12px;
+  color: rgb(196, 5, 5);
+}
+/* OTP styling */
+/* styles.module.css */
+
+.title {
+  font-size: 1.75rem; /* Equivalent to text-2xl */
+  font-weight: 500; /* Equivalent to font-medium */
+  color: white; /* Equivalent to text-white */
+  margin-top: 3rem; /* Equivalent to mt-12 */
+}
+
+.description {
+  font-size: 1rem; /* Equivalent to text-base */
+  color: white; /* Equivalent to text-white */
+  margin-top: 1rem; /* Equivalent to mt-4 */
+  background-color: #323232; /* Equivalent to bg-[#323232] */
+  padding: 1rem; /* Equivalent to p-4 */
+  border-radius: 0.5rem; /* Equivalent to rounded-md */
+}
+
+.label {
+  font-size: 1rem; /* Equivalent to text-base */
+  color: darkgray; /* Equivalent to text-white */
+  margin-top: 1.5rem; /* Equivalent to mt-6 */
+  margin-bottom: 1rem; /* Equivalent to mb-4 */
+}
+
+.inputContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* Equivalent to gap-4 */
+}
+
+.input {
+  border: 1px solid white; /* Equivalent to border */
+  width: 3rem !important; /* Example width, adjust as needed */
+  height: auto; /* Auto height */
+  color: rgb(44, 43, 43) !important; /* Equivalent to text-white */
+  padding: 0.75rem; /* Equivalent to p-3 */
+  border-radius: 0.25rem; /* Equivalent to rounded-md */
+}
+
+.errorMessage {
+  font-size: 1rem; /* Equivalent to text-lg */
+  color: rgb(247, 0, 0); /* Equivalent to text-white */
+  margin-top: 1rem; /* Equivalent to mt-4 */
+}
+
+.error-show {
+  color: red;
+  font-weight: bold;
+}
+/* styles.module.css */
+.input {
+  border: 1px solid white;
+  width: 5rem;
+  height: auto;
+  color: white;
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+  display: block;
+  border: 1px solid #787bff;
+  background-color: transparent;
+}
+
+.input:focus {
+  border-width: 2px;
+  outline: none;
+}

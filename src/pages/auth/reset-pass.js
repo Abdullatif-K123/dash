@@ -1,47 +1,39 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import classes from "./login.module.css";
 import Image from "next/image";
-import {
-  Alert,
-  Box,
-  Button,
-  Checkbox,
-  FormHelperText,
-  InputLabel,
-  Link,
-  Stack,
-  Tab,
-  Tabs,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, InputLabel, Link, Stack, TextField, Typography } from "@mui/material";
 import { useAuth } from "src/hooks/use-auth";
-import { Layout as AuthLayout } from "src/layouts/auth/layout";
+import { ArrowLeftSharp } from "@mui/icons-material";
 
-const Page = () => {
+const ResetPassword = () => {
   const router = useRouter();
   const auth = useAuth();
-  const [method, setMethod] = useState("email");
-  const [rememberMe, setRememberMe] = useState(false);
+  const { user, email } = useAuth();
+  console.log(user, email);
   const formik = useFormik({
     initialValues: {
-      email: "",
+      newPassword: "",
       password: "",
       submit: null,
       rememberMe: false,
     },
     validationSchema: Yup.object({
-      email: Yup.string().email("Must be a valid email").max(255).required("Email is required"),
-      password: Yup.string().max(255).required("Password is required"),
+      newPassword: Yup.string().max(255).required("New Password is required"),
+      password: Yup.string()
+        .max(255)
+        .required("Please confirm the password")
+        .test("password-match", "Passwords do not match", function (value) {
+          return value === this.parent.newPassword;
+        }),
     }),
     onSubmit: async (values, helpers) => {
       try {
-        await auth.signIn(values.email, values.password);
-        router.push("/");
+        await auth.resetPass(values.newPassword, values.password, user);
+        router.replace("/auth/login");
       } catch (err) {
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });
@@ -49,10 +41,6 @@ const Page = () => {
       }
     },
   });
-
-  const handleMethodChange = useCallback((event, value) => {
-    setMethod(value);
-  }, []);
 
   return (
     <>
@@ -106,36 +94,29 @@ const Page = () => {
                 variant="p"
                 sx={{ color: "#566a7f", fontSize: "1.375rem", fontWeight: "500" }}
               >
-                Welcome to GACA !{" "}
+                Reset Password{" "}
               </Typography>
               <Typography variant="p" sx={{ color: "#8290a1", fontSize: "14px" }}>
-                Please sign-in to your account and start the adventure
+                for {email}
               </Typography>
             </Stack>
 
             <form noValidate onSubmit={formik.handleSubmit}>
               <Stack spacing={0}>
-                <InputLabel htmlFor="email">Email</InputLabel>
+                <InputLabel htmlFor="newPassword">New Password</InputLabel>
 
                 <TextField
-                  error={!!(formik.touched.email && formik.errors.email)}
                   fullWidth
                   hiddenLabel
-                  helperText={formik.touched.email && formik.errors.email}
-                  name="email"
+                  name="newPassword"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
-                  type="email"
-                  value={formik.values.email}
+                  type="password"
+                  value={formik.values.newPassword}
                   className={classes.filed}
                 />
-                <div className={classes.passowrdFroget}>
-                  <InputLabel htmlFor="Password">Password</InputLabel>
+                <InputLabel htmlFor="password">Confirm Password</InputLabel>
 
-                  <Link href="/auth/forget-password" style={{ textDecoration: "none" }}>
-                    <p className={classes.forgetPass}>Forget Password?</p>
-                  </Link>
-                </div>
                 <TextField
                   error={!!(formik.touched.password && formik.errors.password)}
                   fullWidth
@@ -147,20 +128,6 @@ const Page = () => {
                   value={formik.values.password}
                   hiddenLabel
                 />
-                {/* Remember Me Checkbox */}
-                <Stack direction="row" alignItems="center" spacing={-1}>
-                  <Checkbox
-                    name="rememberMe"
-                    checked={rememberMe}
-                    onChange={() => {
-                      setRememberMe(!rememberMe);
-                    }}
-                    color="primary"
-                  />
-                  <Typography variant="body2" sx={{ color: "darkgray" }}>
-                    Remember Me
-                  </Typography>
-                </Stack>
               </Stack>
 
               {formik.errors.submit && (
@@ -168,10 +135,29 @@ const Page = () => {
                   {formik.errors.submit}
                 </Typography>
               )}
-              <Button fullWidth size="large" sx={{ mt: 3 }} type="submit" variant="contained">
-                Continue
+              <Button
+                fullWidth
+                size="large"
+                sx={{ mt: 3 }}
+                type="submit"
+                variant="contained"
+                disabled={!formik.isValid || !formik.dirty} // Disable button if form is not valid or unchanged
+              >
+                Set New Password
               </Button>
             </form>
+            <Link
+              href="/auth/login"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                marginTop: "10px",
+                textDecoration: "none",
+              }}
+            >
+              <ArrowLeftSharp /> Back to log in
+            </Link>
           </div>
         </Box>
       </Box>
@@ -179,4 +165,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default ResetPassword;
