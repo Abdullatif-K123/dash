@@ -5,28 +5,30 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import classes from "./login.module.css";
 import Image from "next/image";
+
+import { usePathname, useSearchParams } from "next/navigation";
+import CustomizedSnackbars from "src/components/Snackbar";
 import {
-  Alert,
   Box,
   Button,
   Checkbox,
-  FormHelperText,
   InputLabel,
   Link,
   Stack,
-  Tab,
-  Tabs,
   TextField,
   Typography,
 } from "@mui/material";
 import { useAuth } from "src/hooks/use-auth";
-import { Layout as AuthLayout } from "src/layouts/auth/layout";
 
 const Page = () => {
   const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const resetSuccess = searchParams.get("resetSuccess");
   const auth = useAuth();
   const [method, setMethod] = useState("email");
   const [rememberMe, setRememberMe] = useState(false);
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -173,6 +175,11 @@ const Page = () => {
               </Button>
             </form>
           </div>
+          <CustomizedSnackbars
+            open={resetSuccess} // Pass the resetSuccess flag to determine if the Snackbar should be shown
+            type="success" // Define the type of the Snackbar (e.g., success, error, warning)
+            message="Password reset successfully!" // Define the message to be displayed in the Snackbar
+          />
         </Box>
       </Box>
     </>

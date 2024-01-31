@@ -33,7 +33,7 @@ const ResetPassword = () => {
     onSubmit: async (values, helpers) => {
       try {
         await auth.resetPass(values.newPassword, values.password, user);
-        router.replace("/auth/login");
+        router.replace("/auth/login?resetSuccess=true");
       } catch (err) {
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });
