@@ -60,7 +60,7 @@ export const ShortLink = (props) => {
                 <TableCell>Title</TableCell>
                 <TableCell>Link Address</TableCell>
                 <TableCell>Date added</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>Download Action</TableCell>
+                <TableCell sx={{ textAlign: "center" }}>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

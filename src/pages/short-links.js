@@ -173,7 +173,7 @@ const Page = () => {
           <Stack spacing={3}>
             <Stack direction="row" justifyContent="space-between" spacing={4}>
               <Stack spacing={1}>
-                <Typography variant="h4">Download Archive</Typography>
+                <Typography variant="h4">Short Links</Typography>
               </Stack>
               <div>
                 <Button

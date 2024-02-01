@@ -6,7 +6,7 @@ export const CustomersSearch = ({ handleSearchChange }) => (
     <OutlinedInput
       defaultValue=""
       fullWidth
-      placeholder="Search Download"
+      placeholder="Search..."
       onChange={handleSearchChange}
       startAdornment={
         <InputAdornment position="start">
