@@ -23,6 +23,8 @@ export const SideNavItem = (props) => {
   };
   const pathHome = "/home-page";
   const pathAbout = "/about-page";
+  const pathLinks = "/links-page";
+  const pathShortLinks = "/short-links";
   const Layer1Link = "/master-plan/layer1";
   const Layer2Link = "/master-plan/layer2";
   const Layer3Link = "/master-plan/layer3";
@@ -122,6 +124,30 @@ export const SideNavItem = (props) => {
       : {
           component: NextLink,
           href: pathAbout,
+        }
+    : {};
+  const linkPropsLinks = pathLinks
+    ? external
+      ? {
+          component: "a",
+          href: pathLinks,
+          target: "_blank",
+        }
+      : {
+          component: NextLink,
+          href: pathLinks,
+        }
+    : {};
+  const ShortLinksProps = pathShortLinks
+    ? external
+      ? {
+          component: "a",
+          href: pathShortLinks,
+          target: "_blank",
+        }
+      : {
+          component: NextLink,
+          href: pathShortLinks,
         }
     : {};
   if (title === "Master Plan") {
@@ -745,6 +771,136 @@ export const SideNavItem = (props) => {
                       }}
                     >
                       About Page Settings
+                    </Box>
+                  </ButtonBase>
+                </li>
+              }
+            />
+            <TreeItem
+              nodeId="3"
+              label={
+                <li>
+                  <ButtonBase
+                    sx={{
+                      alignItems: "center",
+                      borderRadius: 1,
+                      display: "flex",
+                      justifyContent: "flex-start",
+                      pl: "16px",
+                      pr: "16px",
+                      py: "6px",
+                      textAlign: "left",
+                      width: "100%",
+                      ...(active && {
+                        backgroundColor: "rgba(255, 255, 255, 0.04)",
+                      }),
+                      "&:hover": {
+                        backgroundColor: "rgba(255, 255, 255, 0.04)",
+                      },
+                    }}
+                    {...linkPropsLinks}
+                  >
+                    {icon1 && (
+                      <Box
+                        component="span"
+                        sx={{
+                          alignItems: "center",
+                          color: "neutral.400",
+                          display: "inline-flex",
+                          justifyContent: "center",
+                          mr: 2,
+                          ...(active && {
+                            color: "primary.main",
+                          }),
+                        }}
+                      >
+                        {icon1}
+                      </Box>
+                    )}
+                    <Box
+                      component="span"
+                      sx={{
+                        color: "neutral.400",
+                        flexGrow: 1,
+                        fontFamily: (theme) => theme.typography.fontFamily,
+                        fontSize: 14,
+                        fontWeight: 600,
+                        lineHeight: "24px",
+                        whiteSpace: "nowrap",
+                        ...(active && {
+                          color: "common.white",
+                        }),
+                        ...(disabled && {
+                          color: "neutral.500",
+                        }),
+                      }}
+                    >
+                      Social Media
+                    </Box>
+                  </ButtonBase>
+                </li>
+              }
+            />
+            <TreeItem
+              nodeId="4"
+              label={
+                <li>
+                  <ButtonBase
+                    sx={{
+                      alignItems: "center",
+                      borderRadius: 1,
+                      display: "flex",
+                      justifyContent: "flex-start",
+                      pl: "16px",
+                      pr: "16px",
+                      py: "6px",
+                      textAlign: "left",
+                      width: "100%",
+                      ...(active && {
+                        backgroundColor: "rgba(255, 255, 255, 0.04)",
+                      }),
+                      "&:hover": {
+                        backgroundColor: "rgba(255, 255, 255, 0.04)",
+                      },
+                    }}
+                    {...ShortLinksProps}
+                  >
+                    {icon1 && (
+                      <Box
+                        component="span"
+                        sx={{
+                          alignItems: "center",
+                          color: "neutral.400",
+                          display: "inline-flex",
+                          justifyContent: "center",
+                          mr: 2,
+                          ...(active && {
+                            color: "primary.main",
+                          }),
+                        }}
+                      >
+                        {icon1}
+                      </Box>
+                    )}
+                    <Box
+                      component="span"
+                      sx={{
+                        color: "neutral.400",
+                        flexGrow: 1,
+                        fontFamily: (theme) => theme.typography.fontFamily,
+                        fontSize: 14,
+                        fontWeight: 600,
+                        lineHeight: "24px",
+                        whiteSpace: "nowrap",
+                        ...(active && {
+                          color: "common.white",
+                        }),
+                        ...(disabled && {
+                          color: "neutral.500",
+                        }),
+                      }}
+                    >
+                      Short Links
                     </Box>
                   </ButtonBase>
                 </li>

@@ -40,7 +40,6 @@ const handlers = {
   [HANDLERS.SIGN_IN]: (state, action) => {
     const user = typeof action.payload === "object" ? action.payload.user : action.payload;
     const email = action.payload.email;
-    console.log(action);
     return {
       ...state,
       isAuthenticated: true,
@@ -69,7 +68,6 @@ export const AuthProvider = (props) => {
   const router = useRouter();
   const [state, dispatch] = useReducer(reducer, initialState);
   const initialized = useRef(false);
-  console.log(state);
   const initialize = async () => {
     initialized.current = true;
 
@@ -155,7 +153,6 @@ export const AuthProvider = (props) => {
           },
         }
       );
-      console.log(response.data);
     } catch (error) {}
   };
   const forgetPass = async (email) => {
@@ -171,14 +168,12 @@ export const AuthProvider = (props) => {
       );
       const user = response.data.returnData.token;
 
-      console.log(response.data.returnData.token);
       dispatch({
         type: HANDLERS.SIGN_IN,
         payload: { user: response.data.returnData.token, email: email },
       });
       return "";
     } catch (error) {
-      console.log(error.response.data.errorMessage);
       return error.response.data.errorMessage;
     }
   };
@@ -196,7 +191,6 @@ export const AuthProvider = (props) => {
           },
         }
       );
-      console.log(response.data);
       const user = response.data.returnData.token;
 
       dispatch({

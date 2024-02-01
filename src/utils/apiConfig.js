@@ -13,6 +13,17 @@ export const API_ROUTES = {
     put: "https://gaca.somee.com/api/User/Update",
     delete: "https://gaca.somee.com/api/User/Delete",
   },
+  socialMedia: {
+    get: "https://gaca.somee.com/api/Social/GetData",
+    post: "https://gaca.somee.com/api/Social/Update",
+  },
+  links: {
+    getAll: "https://gaca.somee.com/api/Link/GetAllPagination",
+    get: "https://gaca.somee.com/api/Link/GetById",
+    post: "https://gaca.somee.com/api/Link/Create",
+    put: "https://gaca.somee.com/api/link/update",
+    delete: "https://gaca.somee.com/api/Link/Delete",
+  },
   statistics: {
     get: "https://gaca.somee.com/api/Statistics/GetData",
   },

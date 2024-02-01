@@ -32,10 +32,28 @@ export const AccountPopover = (props) => {
           px: 2,
         }}
       >
-        <Typography variant="overline">Account</Typography>
+        <Typography variant="overline">Admin</Typography>
         <Typography color="text.secondary" variant="body2"></Typography>
       </Box>
       <Divider />
+      <MenuList
+        disablePadding
+        dense
+        sx={{
+          p: "8px",
+          "& > *": {
+            borderRadius: 1,
+          },
+        }}
+      >
+        <MenuItem
+          onClick={() => {
+            router.push("/edit-profile");
+          }}
+        >
+          My profile
+        </MenuItem>
+      </MenuList>
       <MenuList
         disablePadding
         dense
