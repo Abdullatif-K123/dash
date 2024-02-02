@@ -6,7 +6,11 @@ export const API_ROUTES = {
     forgetPass: "https://gaca.somee.com/api/Auth/ForgetPassword",
     resetPass: "https://gaca.somee.com/api/Auth/ResetPassword",
   },
-
+  profile: {
+    get: "https://gaca.somee.com/api/Profile/GetMyProfileData",
+    put: "https://gaca.somee.com/api/Profile/UpdateMyProfileData",
+    changePassPut: "https://gaca.somee.com/api/Profile/UpdateMyProfilePassword",
+  },
   user: {
     getAll: "https://gaca.somee.com/api/User/GetAllPagination",
     post: "https://gaca.somee.com/api/User/Create",

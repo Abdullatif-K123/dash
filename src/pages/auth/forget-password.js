@@ -25,15 +25,15 @@ const ForgetPassword = () => {
     }),
     onSubmit: async (values, helpers) => {
       try {
-        console.log("I'm here");
         const value = await auth.forgetPass(values.email);
+
         setError(value);
         if (!value.length) {
           router.push("/auth/otp");
         }
       } catch (err) {
         helpers.setStatus({ success: false });
-        helpers.setErrors({ submit: err.message });
+        helpers.setErrors({ submit: "Check your connection!!!" });
         helpers.setSubmitting(false);
       }
     },

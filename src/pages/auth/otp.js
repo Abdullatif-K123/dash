@@ -28,26 +28,20 @@ const OTP = () => {
     validationSchema: Yup.object({}),
     onSubmit: async (values, helpers) => {
       try {
-        console.log("I'm here");
         const otpValue = otp.join("");
-        console.log(otpValue);
         const value = await auth.forgetOtp(otpValue, user);
-
+        console.log(value);
         if (!value.length) {
           router.push("/auth/reset-pass");
         }
-        setError(value);
+        setError("❌ Wrong OTP Please Check Again");
       } catch (err) {
         helpers.setStatus({ success: false });
-        helpers.setErrors({ submit: err.message });
+        helpers.setErrors({ submit: "Check your connection please!!!" });
         helpers.setSubmitting(false);
       }
     },
   });
-  console.log(user);
-  const handleMethodChange = useCallback((event, value) => {
-    setMethod(value);
-  }, []);
 
   function handleChange(value, index) {
     let newArr = [...otp];
@@ -68,13 +62,6 @@ const OTP = () => {
     }
   }
 
-  //   useEffect(() => {
-  //     if (otp.join("") !== "" && otp.join("") !== correctOTP) {
-  //       setOtpError("❌ Wrong OTP Please Check Again");
-  //     } else {
-  //       setOtpError(null);
-  //     }
-  //   }, [otp]);
   return (
     <>
       <Head>
@@ -167,7 +154,15 @@ const OTP = () => {
                   {formik.errors.submit}
                 </Typography>
               )}
-              <Button fullWidth size="large" sx={{ mt: 2 }} type="submit" variant="contained">
+              <p className={classes.error}>{error}</p>
+              <Button
+                fullWidth
+                size="large"
+                sx={{ mt: 2 }}
+                type="submit"
+                variant="contained"
+                disabled={otp.join("").length < 4 ? true : false}
+              >
                 Verify my account
               </Button>
             </form>

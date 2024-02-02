@@ -13,7 +13,6 @@ const ResetPassword = () => {
   const router = useRouter();
   const auth = useAuth();
   const { user, email } = useAuth();
-  console.log(user, email);
   const formik = useFormik({
     initialValues: {
       newPassword: "",

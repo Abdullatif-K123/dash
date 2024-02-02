@@ -159,7 +159,7 @@ const LinkCell = ({
       <Dialog open={isDialogOpen} onClose={handleCancelDelete}>
         <DialogTitle>Confirm Deletion</DialogTitle>
         <DialogContent>
-          <DialogContentText>Are you sure you want to delete this Document?</DialogContentText>
+          <DialogContentText>Are you sure you want to delete?</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancelDelete} color="info">

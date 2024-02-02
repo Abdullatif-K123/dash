@@ -39,7 +39,7 @@ const Page = () => {
   const handleOpenDialog = () => {
     setIsDialogOpen(true);
   };
-
+  console.log(user);
   //Handle Search for
   const handleClose = () => {
     setIsDialogOpen(false);
@@ -60,11 +60,17 @@ const Page = () => {
             Authorization: `Bearer ${user}`,
           },
         });
-        console.log(response.data);
+        console.log(response.status);
         setApiData(response.data.data);
         // Update the component state with the fetched data
       } catch (error) {
-        console.log(error);
+        if (error === "Unauthorized") {
+          // Handle the unauthorized error (e.g., show an error message)
+          console.log("Unauthorized. Please log in.");
+        } else {
+          // Handle other errors
+          console.log("Other error:", error);
+        }
       }
     };
 
