@@ -15,6 +15,7 @@ export const API_ROUTES = {
     getAll: "https://gaca.somee.com/api/User/GetAllPagination",
     post: "https://gaca.somee.com/api/User/Create",
     put: "https://gaca.somee.com/api/User/Update",
+    putPassword: "https://gaca.somee.com//api/User/UpdatePassword",
     delete: "https://gaca.somee.com/api/User/Delete",
   },
   socialMedia: {

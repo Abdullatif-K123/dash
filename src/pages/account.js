@@ -17,8 +17,6 @@ import {
 import axios from "axios";
 import { useAuth } from "src/hooks/use-auth";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import { AccountProfile } from "src/sections/account/account-profile";
-import { AccountProfileDetails } from "src/sections/account/account-profile-details";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import UserTable from "src/sections/account/UserTable";
 import { useRef, useState, useEffect } from "react";
@@ -39,7 +37,6 @@ const Page = () => {
   const handleOpenDialog = () => {
     setIsDialogOpen(true);
   };
-  console.log(user);
   //Handle Search for
   const handleClose = () => {
     setIsDialogOpen(false);
@@ -60,7 +57,7 @@ const Page = () => {
             Authorization: `Bearer ${user}`,
           },
         });
-        console.log(response.status);
+        console.log(response.data.data);
         setApiData(response.data.data);
         // Update the component state with the fetched data
       } catch (error) {

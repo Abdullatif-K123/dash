@@ -49,6 +49,7 @@ export const AccountPopover = (props) => {
         <MenuItem
           onClick={() => {
             router.push("/edit-profile");
+            onClose?.();
           }}
         >
           My profile

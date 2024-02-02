@@ -1,4 +1,4 @@
-import { Delete, Edit } from "@mui/icons-material";
+import { Delete, Edit, Label } from "@mui/icons-material";
 import {
   Button,
   Dialog,
@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  FormLabel,
   IconButton,
   TableCell,
   TableRow,
@@ -19,11 +20,19 @@ import { API_ROUTES } from "src/utils/apiConfig";
 const UserCell = ({ item, DateCreate, DateUpdate, handleRemove }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [open, setIsDialogOpenUpdate] = useState(false);
+  const [upDatePassword, setUpdatePassword] = useState(false);
+  const [openSnack, setOpenSnack] = useState(false);
+  const [message, setMessage] = useState(".");
+  const [status, setStatus] = useState("success");
+  const [testing, setTesting] = useState(true);
   const { user } = useAuth();
   const [formData, setFormData] = useState({
     name: item.name,
     email: item.email,
+    newPassword: "",
+    confirmPassword: "",
   });
+
   //creating for add button
   const handleOpenDialog = () => {
     setIsDialogOpenUpdate(true);
@@ -39,7 +48,14 @@ const UserCell = ({ item, DateCreate, DateUpdate, handleRemove }) => {
     setFormData({
       name: "",
       email: "",
+      newPassword: "",
+      confirmPassword: "",
     });
+    setUpdatePassword(false);
+    setTesting(true);
+    setTimeout(() => {
+      setOpenSnack(false);
+    }, 3000);
   };
   //Creating new users
   const handleChange = (e) => {
@@ -48,39 +64,83 @@ const UserCell = ({ item, DateCreate, DateUpdate, handleRemove }) => {
       ...prevData,
       [name]: value,
     }));
+    if (upDatePassword) {
+      name === "newPassword"
+        ? formData.confirmPassword !== e.target.value
+          ? setTesting(true)
+          : setTesting(false)
+        : formData.newPassword !== e.target.value
+        ? setTesting(true)
+        : setTesting(false);
+    }
   };
+
   const handleCreateButton = async (e) => {
     // Validate input fields if needed
     e.preventDefault();
-    try {
-      const response = await axios.put(
-        API_ROUTES.user.put,
-        {
-          id: item.id,
-          name: formData.name.length ? formData.name : item.name,
-          email: formData.email.length ? formData.email : item.email,
-        },
-        { headers: { Authorization: `Bearer ${user}` } }
-      );
-      console.log(response);
+    if (upDatePassword) {
+      try {
+        await axios
+          .put(
+            API_ROUTES.user.putPassword,
+            {
+              userId: item.id,
+              newPassword: formData.newPassword,
+              confirmPassword: formData.confirmPassword,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${user}`,
+              },
+            }
+          )
+          .then((response) => {
+            handleClose();
+            setOpenSnack(true);
+            setMessage("Password of the user has been changed!!!");
+            setStatus("success");
+          });
+      } catch (error) {
+        setOpenSnack(true);
+        setMessage(error.response ? error.response.data.errorMessage : "Check you connection");
+        setStatus("error");
+      }
+      setTimeout(() => {
+        setOpenSnack(false);
+      }, 3000);
+    } else {
+      try {
+        const response = await axios.put(
+          API_ROUTES.user.put,
+          {
+            id: item.id,
+            name: formData.name.length ? formData.name : item.name,
+            email: formData.email.length ? formData.email : item.email,
+          },
+          { headers: { Authorization: `Bearer ${user}` } }
+        );
 
-      item.name = formData.name.length ? formData.name : item.name;
-      item.email = formData.email.length ? formData.email : item.email;
+        item.name = formData.name.length ? formData.name : item.name;
+        item.email = formData.email.length ? formData.email : item.email;
+        setOpenSnack(true);
+        setStatus("success");
+        setMessage("Information of the user has been changed");
 
-      handleClose();
-    } catch (error) {
-      console.log(error);
+        handleClose();
+      } catch (error) {
+        console.log(error);
+        setOpenSnack(true);
+        setStatus("error");
+        setMessage(error.response ? error.response.data.errorMessage : "Check you connection");
+      }
     }
   };
   const handleDelete = () => {
     // Show the confirmation dialog
     setIsDialogOpen(true);
-    console.log(user);
   };
 
   const handleConfirmDelete = async () => {
-    // Handle the deletion logic here
-    // ...
     try {
       const response = await axios.delete(`${API_ROUTES.user.delete}/${item.id}`, {
         headers: {
@@ -104,37 +164,82 @@ const UserCell = ({ item, DateCreate, DateUpdate, handleRemove }) => {
     <TableRow>
       {/* Title Dialog  */}
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Add Button</DialogTitle>
+        <DialogTitle>Update user {upDatePassword ? "Password" : "Info"}</DialogTitle>
         <DialogContent>
-          <DialogContentText>Please enter the details for the new blg.</DialogContentText>
+          {upDatePassword ? "Make sure to write at least 8 character for new password" : ""}
+        </DialogContent>
+        <DialogContent>
           <form onSubmit={handleCreateButton}>
-            <TextField
-              label="Name"
-              name="name"
+            {!upDatePassword ? (
+              <>
+                <TextField
+                  label="Name"
+                  name="name"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  value={formData.name}
+                  onChange={handleChange}
+                />
+                <TextField
+                  label="Email"
+                  name="email"
+                  type="email"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  value={formData.email}
+                  onChange={handleChange}
+                />
+              </>
+            ) : (
+              <>
+                <FormLabel id="newPassword">New Password</FormLabel>
+                <TextField
+                  name="newPassword"
+                  variant="outlined"
+                  type="password"
+                  fullWidth
+                  margin="normal"
+                  value={formData.newPassword}
+                  onChange={handleChange}
+                />
+                <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
+                <TextField
+                  name="confirmPassword"
+                  type="password"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                />
+              </>
+            )}
+
+            <Button
+              onClick={() => {
+                setUpdatePassword(!upDatePassword);
+              }}
               variant="outlined"
-              fullWidth
-              margin="normal"
-              value={formData.name}
-              onChange={handleChange}
-            />
-            <TextField
-              label="Email"
-              name="email"
-              type="email"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              value={formData.email}
-              onChange={handleChange}
-            />
+              color="success"
+            >
+              {upDatePassword ? "Hide" : "Show"} Update Password?
+            </Button>
 
             <DialogActions>
               <Button onClick={handleClose} color="primary">
                 Cancel
               </Button>
-              <Button type="submit" color="primary">
-                Update
-              </Button>
+              {upDatePassword ? (
+                <Button type="submit" color="primary" disabled={testing}>
+                  Update
+                </Button>
+              ) : (
+                <Button type="submit" color="primary">
+                  Update
+                </Button>
+              )}
             </DialogActions>
           </form>
         </DialogContent>
@@ -158,7 +263,7 @@ const UserCell = ({ item, DateCreate, DateUpdate, handleRemove }) => {
       <TableCell>{item.name}</TableCell>
       <TableCell>{item.email}</TableCell>
       <TableCell>{DateCreate}</TableCell>
-      <TableCell>{DateUpdate}</TableCell>
+      <TableCell>{DateUpdate === "Invalid Date" ? "" : DateUpdate}</TableCell>
       <TableCell>
         {/* Add your edit and delete functionality here */}
         <IconButton aria-label="edit" onClick={handleOpenDialog}>
@@ -168,6 +273,7 @@ const UserCell = ({ item, DateCreate, DateUpdate, handleRemove }) => {
           <Delete />
         </IconButton>
       </TableCell>
+      <CustomizedSnackbars open={openSnack} type={status} message={message} />
     </TableRow>
   );
 };
