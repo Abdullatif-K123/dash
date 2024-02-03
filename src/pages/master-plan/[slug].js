@@ -10,6 +10,7 @@ import {
   Typography,
   Input,
   InputLabel,
+  TextareaAutosize,
 } from "@mui/material";
 import { useSelection } from "src/hooks/use-selection";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
@@ -53,6 +54,7 @@ const MasterPlan = () => {
   const [open, setIsDialogOpen] = useState(false);
   const [createdId, setCreatedId] = useState(null);
   const [masterTitle, setMasterTitle] = useState("");
+  const [masterDescription, setMasterDescriptoin] = useState("");
   const [descPlan, setDescPlan] = useState("");
   const inputRef = useRef(null);
   const { user } = useAuth();
@@ -102,7 +104,6 @@ const MasterPlan = () => {
       handleClickSnack();
       const idHolder = response.data.returnData;
       setApiData([...apiData, idHolder]);
-      console.log(idHolder);
     } catch (error) {
       console.log(error);
     }
@@ -147,7 +148,6 @@ const MasterPlan = () => {
 
         setApiData(response.data.returnData);
 
-        console.log(response.data.returnData);
         // Update the component state with the fetched data
       } catch (error) {
         console.log(error);
@@ -161,7 +161,9 @@ const MasterPlan = () => {
             Authorization: `Bearer ${user}`,
           },
         });
-        setMasterTitle(response.data.returnData[id - 1]);
+
+        setMasterTitle(response.data.returnData[id - 1].title);
+        setMasterDescriptoin(response.data.returnData[id - 1].descripton);
         // Update the component state with the fetched data
       } catch (error) {
         console.log(error);
@@ -190,6 +192,7 @@ const MasterPlan = () => {
         {
           id: id,
           title: masterTitle,
+          descripton: masterDescription,
         },
         {
           headers: {
@@ -274,11 +277,30 @@ const MasterPlan = () => {
               onChange={handleChange}
               fullWidth
               name="title"
-              value={masterTitle.title}
+              hiddenLabel
+              value={masterTitle}
+            />
+            <TextareaAutosize
+              placeholder="Layer description"
+              id="description"
+              onChange={(e) => {
+                setMasterDescriptoin(e.target.value);
+              }}
+              fullWidth
+              name="Description"
+              minRows={3}
+              value={masterDescription}
+              style={{
+                padding: "2px",
+                border: "2px solid #ccc",
+                borderRadius: "4px",
+                fontSize: "14px",
+                resize: "none",
+              }}
             />
             <div>
               <Button onClick={handleUpdate} color="warning" variant="contained">
-                Update Title
+                Update Layer info
               </Button>
             </div>
 

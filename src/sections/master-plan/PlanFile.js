@@ -43,7 +43,7 @@ export const PlanFile = (props) => {
 
   const selectedSome = selected.length > 0 && selected.length < items.length;
   const selectedAll = items.length > 0 && selected.length === items.length;
-  console.log(items);
+
   return (
     <Card>
       {/* Delete dialog */}
