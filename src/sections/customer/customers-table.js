@@ -1,49 +1,45 @@
 import PropTypes from "prop-types";
-import { format } from "date-fns";
 import {
-  Avatar,
   Box,
   Card,
-  Checkbox,
-  Stack,
-  SvgIcon,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TablePagination,
   TableRow,
-  Typography,
-  Button,
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
-
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "src/hooks/use-auth";
-import { FormControl } from "@mui/material";
-import { Input } from "@mui/material";
-import { InputLabel } from "@mui/material";
 import DocumentCell from "./DocumentCell";
+import CustomizedSnackbars from "src/components/Snackbar";
 export const CustomersTable = (props) => {
+  const [openSnack, setOpenSnack] = useState(false);
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState("success");
+  const handleCloseSnack = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnack(false);
+  };
   const { user } = useAuth();
   const {
     count = 0,
     items = [],
-    onDeselectAll,
-    onDeselectOne,
     onPageChange = () => {},
     onRowsPerPageChange,
-    onSelectAll,
-    onSelectOne,
     page = 0,
     rowsPerPage = 0,
     selected = [],
     handleRemove,
   } = props;
-
-  const selectedSome = selected.length > 0 && selected.length < items.length;
-  const selectedAll = items.length > 0 && selected.length === items.length;
-
+  const handleUpdate = (status, message) => {
+    setOpenSnack(true);
+    setStatus(status);
+    setMessage(message);
+  };
   return (
     <Card>
       {/* Delete dialog */}
@@ -80,6 +76,7 @@ export const CustomersTable = (props) => {
                     customer={customer}
                     user={user}
                     handleRemove={handleRemove}
+                    handleUpdate={handleUpdate}
                   />
                 );
               })}
@@ -87,14 +84,11 @@ export const CustomersTable = (props) => {
           </Table>
         </Box>
       </Scrollbar>
-      <TablePagination
-        component="div"
-        count={count}
-        onPageChange={onPageChange}
-        onRowsPerPageChange={onRowsPerPageChange}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        rowsPerPageOptions={[5, 10, 25]}
+      <CustomizedSnackbars
+        handleClose={handleCloseSnack}
+        open={openSnack}
+        type={status}
+        message={message}
       />
     </Card>
   );

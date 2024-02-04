@@ -29,7 +29,7 @@ const statusMap = {
   refunded: "error",
 };
 const feedBackType = ["Recommendation", "Error Repot", "Question", "Other"];
-const TableMessage = ({ order, DeleteItems }) => {
+const TableMessage = ({ order, DeleteItems, notification }) => {
   const { user } = useAuth();
   const [confirmDelete, setConfirmDelete] = useState(false);
 
@@ -59,7 +59,6 @@ const TableMessage = ({ order, DeleteItems }) => {
 
   const handleDelete = async () => {
     // Add your delete logic here
-    console.log("Deleting...");
     handleCloseDialog();
     try {
       // Make your API request here
@@ -68,12 +67,15 @@ const TableMessage = ({ order, DeleteItems }) => {
           Authorization: `Bearer ${user}`,
         },
       });
-      console.log(response.data);
-
+      notification("success", "Message has been deleted ✔");
       setConfirmDelete(false);
       // Update the component state with the fetched data
     } catch (error) {
       console.log(error);
+      notification(
+        "error",
+        error.response ? error.response.data.errorMessage : "Something went wrong ❌"
+      );
     }
     DeleteItems(order.id);
   };

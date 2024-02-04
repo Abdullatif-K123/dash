@@ -41,7 +41,6 @@ const Page = () => {
   if (openSnack) {
     return (
       <>
-        {" "}
         <CustomizedSnackbars
           open={openSnack}
           handleClose={handleCloseSnack}
@@ -96,19 +95,6 @@ const Page = () => {
               <OverViewBlog sx={{ height: "100%" }} value={statistics.blogCount} />
             </Grid>
           </Grid>
-          {/* <Grid xs={12} md={6} lg={5} style={{ marginBottom: "10px" }}>
-            <OverviewTraffic
-              chartSeries={[
-                statistics.userCount,
-                statistics.documentCount,
-                statistics.blogCount,
-                statistics.stakeholderCount,
-                statistics.messageCount,
-              ]}
-              labels={["User", "Document", "Blog", "Stakeholder", "Message"]}
-              sx={{ height: "100%" }}
-            />
-          </Grid> */}
         </Container>
       </Box>
     </>

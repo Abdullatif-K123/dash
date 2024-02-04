@@ -34,7 +34,6 @@ export const CompanyCard = (props) => {
     month: "long",
     day: "numeric",
   };
-
   const humanReadableDateCreated = dateCreated.toLocaleString("en-US", options);
   const humanReadableDateUpdated = dateUpdated.toLocaleString("en-US", options);
   //Delete dialog handler
@@ -62,9 +61,11 @@ export const CompanyCard = (props) => {
       });
       setIsDialogOpen(false);
       props.handleRemove(company.id);
+      props.notification("success", "Stackholder has been deleted ✔");
       console.log(response);
     } catch (error) {
       console.log(error);
+      props.notification("error", "Something went wrong ❌");
     }
     // Close the confirmation dialog
   };
@@ -115,8 +116,10 @@ export const CompanyCard = (props) => {
 
         setImageUrl(response.data.returnData);
         handleCloseDialog();
+        props.notification("success", "Stackholder has been changed ✔");
       } catch (error) {
         console.log(error);
+        props.notification("error", "Something went wrong ❌");
       }
     } else {
       const titles = titleRef.current.value;
@@ -135,10 +138,11 @@ export const CompanyCard = (props) => {
           }
         );
         setTitle(response.data.returnData.title);
-        console.log(response);
+        props.notification("success", "Stackholder title has been changed ✔");
         handleCloseDialog();
       } catch (error) {
         console.log(error);
+        props.notification("error", "Something went wrong ❌");
       }
     }
 

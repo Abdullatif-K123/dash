@@ -6,7 +6,6 @@ import {
   Box,
   Button,
   Container,
-  Pagination,
   Stack,
   SvgIcon,
   Typography,
@@ -24,14 +23,28 @@ import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
 import { CompanyCard } from "src/sections/companies/company-card";
 import { CompaniesSearch } from "src/sections/companies/companies-search";
 import { API_ROUTES } from "src/utils/apiConfig";
+import CustomizedSnackbars from "src/components/Snackbar";
 const Page = () => {
   const [apiData, setApiData] = useState([]);
   const { user } = useAuth();
   const [createdId, setCreatedId] = useState(null);
-
   const [open, setIsDialogOpen] = useState(false);
   const inputRef = useRef(null);
+  const [openSnack, setOpenSnack] = useState(false);
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState("success");
+  const handleCloseSnack = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
 
+    setOpenSnack(false);
+  };
+  const handleNotification = (status, messages) => {
+    setOpenSnack(true);
+    setStatus(status);
+    setMessage(messages);
+  };
   //creating for add button
   const handleOpenDialog = () => {
     setIsDialogOpen(true);
@@ -44,7 +57,6 @@ const Page = () => {
 
   const handleCreateButton = async () => {
     // Validate input fields if needed
-    console.log(inputRef.current.value);
     const titleValue = inputRef.current.value;
     // Pass the title and image URL to the parent component
     try {
@@ -60,8 +72,13 @@ const Page = () => {
 
       const idHolder = response.data.returnData.id;
       setCreatedId(idHolder);
+      handleNotification("success", "Stackholder created successfuly ✔");
     } catch (error) {
       console.log(error);
+      handleNotification(
+        "error",
+        error.response ? error.response.data.errorMessage : "Something went wrong ❌"
+      );
     }
 
     handleOpenUploadDialog();
@@ -98,7 +115,6 @@ const Page = () => {
   };
   //Function to handle submitting file
   const handleFileSubmit = async () => {
-    console.log(fileUpload);
     const formData = new FormData();
     formData.append("file", fileUpload);
     try {
@@ -247,7 +263,12 @@ const Page = () => {
             <Grid container spacing={3}>
               {filterData.map((company) => (
                 <Grid xs={12} md={6} lg={4} key={company.id}>
-                  <CompanyCard handleRemove={handleRemove} company={company} user={user} />
+                  <CompanyCard
+                    handleRemove={handleRemove}
+                    company={company}
+                    user={user}
+                    notification={handleNotification}
+                  />
                 </Grid>
               ))}
             </Grid>
@@ -259,6 +280,12 @@ const Page = () => {
             ></Box>
           </Stack>
         </Container>
+        <CustomizedSnackbars
+          handleClose={handleCloseSnack}
+          open={openSnack}
+          type={status}
+          message={message}
+        />
       </Box>
     </>
   );

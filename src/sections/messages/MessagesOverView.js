@@ -17,11 +17,25 @@ import {
   TableRow,
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
-import { SeverityPill } from "src/components/severity-pill";
 import TableMessage from "./TableMessage";
 import { useState } from "react";
-
+import CustomizedSnackbars from "src/components/Snackbar";
 export const MessagesOverView = (props) => {
+  const [openSnack, setOpenSnack] = useState(false);
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState("success");
+  const handleCloseSnack = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnack(false);
+  };
+  const handleNotification = (status, message) => {
+    setOpenSnack(true);
+    setStatus(status);
+    setMessage(message);
+  };
   const { datas = [], sx } = props;
   const [data, setData] = useState(props.data);
   const router = useRouter();
@@ -47,7 +61,14 @@ export const MessagesOverView = (props) => {
             </TableHead>
             <TableBody>
               {data.map((order) => {
-                return <TableMessage key={order.id} order={order} DeleteItems={handleDeleted} />;
+                return (
+                  <TableMessage
+                    key={order.id}
+                    order={order}
+                    DeleteItems={handleDeleted}
+                    notification={handleNotification}
+                  />
+                );
               })}
             </TableBody>
           </Table>
@@ -68,6 +89,12 @@ export const MessagesOverView = (props) => {
           View all
         </Button>
       </CardActions>
+      <CustomizedSnackbars
+        handleClose={handleCloseSnack}
+        open={openSnack}
+        type={status}
+        message={message}
+      />
     </Card>
   );
 };

@@ -20,15 +20,25 @@ import { Stack } from "@mui/system";
 import React, { useRef, useState } from "react";
 import axios from "axios";
 import { API_ROUTES } from "src/utils/apiConfig";
-const DocumentCell = ({ customer, isSelected, formattedDate, handleRemove, user }) => {
+
+const DocumentCell = ({
+  handleUpdate,
+  customer,
+  isSelected,
+  formattedDate,
+  handleRemove,
+  user,
+}) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [currentId, setCurrentId] = useState("");
   const [currentName, setCurrentName] = useState("");
   const [docUrl, setdocUrl] = useState("");
+
   const titleRef = useRef(null);
   const [checked, setCheckd] = useState(false);
   const [fileUpload, setFileUpload] = useState({});
+
   //url Action download
   function downloadPdf(url) {
     const link = document.createElement("a");
@@ -61,6 +71,7 @@ const DocumentCell = ({ customer, isSelected, formattedDate, handleRemove, user 
       });
       setIsDialogOpen(false);
       handleRemove(currentId);
+      handleUpdate("success", "Document has been deleted ✔");
     } catch (error) {
       console.log(error);
     }
@@ -109,8 +120,13 @@ const DocumentCell = ({ customer, isSelected, formattedDate, handleRemove, user 
             },
           }
         );
+        handleUpdate("success", "Document has been updated ✔");
       } catch (error) {
         console.log(error);
+        handleUpdate(
+          "error",
+          error.response ? error.response.data.errorMessage : "We encountered an error please ❌"
+        );
       }
     } else {
       try {
@@ -128,6 +144,7 @@ const DocumentCell = ({ customer, isSelected, formattedDate, handleRemove, user 
             },
           }
         );
+        handleUpdate("success", "Document has been updated ✔");
         customer.title = title;
       } catch (error) {
         console.log(error);

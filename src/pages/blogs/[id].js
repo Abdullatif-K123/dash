@@ -25,7 +25,6 @@ const EditableCard = () => {
   const router = useRouter();
   const { id } = router.query;
   const [open, setOpen] = React.useState(false);
-  const [isEditing, setIsEditing] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [image, setImage] = useState(""); // Replace with your default image path
   const [title, setTitle] = useState("");
@@ -60,7 +59,6 @@ const EditableCard = () => {
       });
       setIsDialogOpen(false);
       router.replace("/blogs");
-      console.log(response);
     } catch (error) {
       console.log(error);
     }
@@ -71,18 +69,7 @@ const EditableCard = () => {
     // Close the confirmation dialog without deleting
     setIsDialogOpen(false);
   };
-  const handleEditClick = () => {
-    setOpenDialog(true);
-  };
 
-  const handleDialogClose = () => {
-    setOpenDialog(false);
-  };
-
-  const handleUpdate = () => {
-    // Handle update logic here
-    setOpenDialog(false);
-  };
   const handleupdateBolg = async () => {
     try {
       const response = await axios.put(
@@ -117,7 +104,6 @@ const EditableCard = () => {
         setTitle(data.title);
         setDescription(data.description);
         setImage(data.imageUrl);
-        console.log(response.data);
 
         // Update the component state with the fetched data
       } catch (error) {
@@ -145,13 +131,9 @@ const EditableCard = () => {
   const handleFileUpload = (event) => {
     const selectedFile = event.target.files[0];
     setFileUpload(selectedFile);
-    // Handle the selected file, e.g., upload it to a server
-    console.log("Selected file:", selectedFile);
-    // Close the dialog after handling the file
   };
   //Function to handle submitting file
   const handleFileSubmit = async () => {
-    console.log(fileUpload);
     const formData = new FormData();
     formData.append("file", fileUpload);
     try {

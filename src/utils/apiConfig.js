@@ -54,6 +54,12 @@ export const API_ROUTES = {
     put: "https://gaca.somee.com/api/Masterplancontext/Update",
     delete: "https://gaca.somee.com/api/Masterplancontext/Delete",
   },
+  topic: {
+    get: "https://gaca.somee.com/api/Topic/GetContextById",
+    post: "https://gaca.somee.com/api/Topic/Create",
+    put: "https://gaca.somee.com/api/Topic/Update",
+    delete: "https://gaca.somee.com/api/Topic/Delete",
+  },
   stakeholder: {
     getAll: "https://gaca.somee.com/api/Stakeholder/GetAllPagination",
     post: "https://gaca.somee.com/api/Stakeholder/Create",

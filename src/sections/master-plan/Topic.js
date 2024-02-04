@@ -22,7 +22,7 @@ import React from "react";
 import TipTap from "../HomeAbout/TipTapEditor";
 import MasterPlanDialog from "src/utils/masterPlan-Dialog";
 import { API_ROUTES } from "src/utils/apiConfig";
-const TablePlan = ({ customer, isSelected, handleRemove, handleSelect }) => {
+const Topic = ({ customer, isSelected, handleRemove, handleSelect }) => {
   const { user } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
@@ -285,4 +285,4 @@ const TablePlan = ({ customer, isSelected, handleRemove, handleSelect }) => {
   );
 };
 
-export default TablePlan;
+export default Topic;

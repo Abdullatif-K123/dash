@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
 import DocumentIcon from "@heroicons/react/24/solid/DocumentIcon";
-
+import Topic from "./Topic";
 import { useRef, useState } from "react";
 import { useAuth } from "src/hooks/use-auth";
 import { FormControl } from "@mui/material";
@@ -40,61 +40,100 @@ export const PlanFile = (props) => {
     selected = [],
     handleRemove,
   } = props;
-
+  const [choose, setChoose] = useState("");
+  const [topic, setTopic] = useState([]);
   const selectedSome = selected.length > 0 && selected.length < items.length;
   const selectedAll = items.length > 0 && selected.length === items.length;
-
+  const handleSelect = (title) => {
+    setChoose(title);
+    const titleFind = items.find((context) => {
+      return context.title === title;
+    });
+    console.log(titleFind);
+    setTopic(titleFind.topics);
+  };
   return (
-    <Card>
-      {/* Delete dialog */}
+    <>
+      <p
+        onClick={() => {
+          setTopic([]);
+          setChoose("");
+        }}
+      >
+        {choose}
+      </p>
+      <Card>
+        {/* Delete dialog */}
+        <Scrollbar>
+          <Box sx={{ minWidth: 800 }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell padding="checkbox"></TableCell>
+                  <TableCell>Plan title</TableCell>
+                  <TableCell></TableCell>
+                  <TableCell>CreatedAt</TableCell>
+                  <TableCell>UpdatedAt</TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>Action</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {topic.length
+                  ? topic.map((customer) => {
+                      const dateCreatedString = customer.dateCreated;
+                      const dateCreated = new Date(dateCreatedString);
 
-      <Scrollbar>
-        <Box sx={{ minWidth: 800 }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell padding="checkbox"></TableCell>
-                <TableCell>Plan title</TableCell>
-                <TableCell></TableCell>
-                <TableCell>CreatedAt</TableCell>
-                <TableCell>UpdatedAt</TableCell>
-                <TableCell>Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {items.map((customer) => {
-                const dateCreatedString = customer.dateCreated;
-                const dateCreated = new Date(dateCreatedString);
+                      const options = { year: "numeric", month: "long", day: "numeric" };
+                      const formattedDate = dateCreated.toLocaleDateString(undefined, options);
 
-                const options = { year: "numeric", month: "long", day: "numeric" };
-                const formattedDate = dateCreated.toLocaleDateString(undefined, options);
+                      const isSelected = selected.includes(customer.id);
+                      // const createdAt = format(customer.createdAt, "dd/MM/yyyy");
 
-                const isSelected = selected.includes(customer.id);
-                // const createdAt = format(customer.createdAt, "dd/MM/yyyy");
+                      return (
+                        <TablePlan
+                          customer={customer}
+                          isSelected={isSelected}
+                          key={customer.id}
+                          handleRemove={handleRemove}
+                          handleSelect={handleSelect}
+                        />
+                      );
+                    })
+                  : items.map((customer) => {
+                      const dateCreatedString = customer.dateCreated;
+                      const dateCreated = new Date(dateCreatedString);
 
-                return (
-                  <TablePlan
-                    customer={customer}
-                    isSelected={isSelected}
-                    key={customer.id}
-                    handleRemove={handleRemove}
-                  />
-                );
-              })}
-            </TableBody>
-          </Table>
-        </Box>
-      </Scrollbar>
-      <TablePagination
-        component="div"
-        count={count}
-        onPageChange={onPageChange}
-        onRowsPerPageChange={onRowsPerPageChange}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        rowsPerPageOptions={[5, 10, 25]}
-      />
-    </Card>
+                      const options = { year: "numeric", month: "long", day: "numeric" };
+                      const formattedDate = dateCreated.toLocaleDateString(undefined, options);
+
+                      const isSelected = selected.includes(customer.id);
+                      // const createdAt = format(customer.createdAt, "dd/MM/yyyy");
+
+                      return (
+                        <TablePlan
+                          customer={customer}
+                          isSelected={isSelected}
+                          key={customer.id}
+                          handleRemove={handleRemove}
+                          handleSelect={handleSelect}
+                        />
+                      );
+                    })}
+              </TableBody>
+            </Table>
+          </Box>
+        </Scrollbar>
+        <TablePagination
+          component="div"
+          count={count}
+          onPageChange={onPageChange}
+          onRowsPerPageChange={onRowsPerPageChange}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          rowsPerPageOptions={[5, 10, 25]}
+        />
+      </Card>
+    </>
   );
 };
 

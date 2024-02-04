@@ -16,8 +16,7 @@ import TextField from "@mui/material/TextField";
 import axios from "axios";
 import { useAuth } from "src/hooks/use-auth";
 import { API_ROUTES } from "src/utils/apiConfig";
-const now = new Date();
-
+import CustomizedSnackbars from "src/components/Snackbar";
 let data = [];
 
 const useCustomers = (page, rowsPerPage) => {
@@ -41,6 +40,16 @@ const Page = () => {
   const [apiData, setApiData] = useState([]);
   const [open, setIsDialogOpen] = useState(false);
   const [createdId, setCreatedId] = useState(null);
+  const [openSnack, setOpenSnack] = useState(false);
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState("success");
+  const handleCloseSnack = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnack(false);
+  };
   const inputRef = useRef(null);
   const { user } = useAuth();
   //creating for add button
@@ -69,8 +78,18 @@ const Page = () => {
 
       const idHolder = response.data.returnData.id;
       setCreatedId(idHolder);
+      setOpenSnack(true);
+      setMessage("Document has been created ✔");
+      setStatus("success");
     } catch (error) {
       console.log(error);
+      setOpenSnack(true);
+      setStatus("error");
+      setMessage(
+        error?.response
+          ? error.response.data.errorMessage
+          : "There are an issue please check your internet ❌"
+      );
     }
 
     handleOpenUploadDialog();
@@ -262,6 +281,12 @@ const Page = () => {
             />
           </Stack>
         </Container>
+        <CustomizedSnackbars
+          handleClose={handleCloseSnack}
+          open={openSnack}
+          type={status}
+          message={message}
+        />
       </Box>
     </>
   );
