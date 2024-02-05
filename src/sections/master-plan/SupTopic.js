@@ -22,20 +22,13 @@ import React from "react";
 import TipTap from "../HomeAbout/TipTapEditor";
 import MasterPlanDialog from "src/utils/masterPlan-Dialog";
 import { API_ROUTES } from "src/utils/apiConfig";
-const TablePlan = ({
-  notification,
-  method,
-  customer,
-  isSelected,
-  handleRemove,
-  handleSelect,
-  addingTitle,
-}) => {
+const SupTopic = ({ method, customer, isSelected, handleSelect, addingTitle, notification }) => {
   const { user } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [currentId, setCurrentId] = useState("");
   const [currentName, setCurrentName] = useState("");
+  const [docUrl, setdocUrl] = useState("");
   const [desc, setDesc] = useState(customer.description);
   const [descriptionPlan, setDescriptionPlan] = useState(customer.description);
   const [title, setTitle] = useState(customer.title);
@@ -72,21 +65,15 @@ const TablePlan = ({
 
     // ...
     try {
-      const response = await axios.delete(
-        `${
-          method === "plan" ? API_ROUTES.topic.delete : API_ROUTES.masterPlanContext.delete
-        }/${currentId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${user}`,
-          },
-        }
-      );
+      const response = await axios.delete(`${API_ROUTES.sup_topic.delete}/${currentId}`, {
+        headers: {
+          Authorization: `Bearer ${user}`,
+        },
+      });
       setIsDialogOpen(false);
-      notification("success", "Master Plan context has been deleted successfully ✔");
-      handleRemove(currentId);
+      notification("success", "Sub-topic has been removed ✔");
     } catch (error) {
-      console.log(error);
+      notification("error", error?.response ? error.response.data : "Something went wrong ❌");
     }
     // Close the confirmation dialog
   };
@@ -100,7 +87,7 @@ const TablePlan = ({
   const handleOpenDialog = (id, name, url) => {
     setCurrentName(name);
     setCurrentId(id);
-
+    setdocUrl(url);
     setOpenDialog(true);
   };
 
@@ -112,17 +99,17 @@ const TablePlan = ({
   // Function to handle file upload (you can customize this based on your API)
   const handlUpdateConfirm = async () => {
     // Perform file upload logic here
-
+    console.log(customer);
     // const file = fileRef.current.files[0];
 
     try {
       const response = await axios.put(
-        API_ROUTES.masterPlanContext.put,
+        API_ROUTES.sup_topic.put,
         {
           id: customer.id,
           title: title,
           description: desc,
-          masterPlanId: customer.masterPlanId,
+          topicId: customer.topicId,
         },
         {
           headers: {
@@ -131,11 +118,10 @@ const TablePlan = ({
         }
       );
       handleCloseDialog();
-      notification("success", "Master plan context updated successfully ✔");
       customer.title = title;
+      notification("success", "Sub-topic has been updated successfully ✔");
     } catch (error) {
-      console.log(error);
-      notification("error", "something went wrong ❌");
+      notification("error", error?.response ? error.response.data : "Something went wrong ❌");
     }
     // Make your PUT request with the title and file here
   };
@@ -144,10 +130,10 @@ const TablePlan = ({
     console.log(customer.id);
     try {
       const response = await axios.post(
-        API_ROUTES.topic.post,
+        API_ROUTES.sup_topic_addendum.post,
 
         {
-          masterPlanLayerId: Number(customer.id),
+          subTopicId: customer.id,
           title: titlePlan,
           description: descPlan,
         },
@@ -157,11 +143,13 @@ const TablePlan = ({
           },
         }
       );
-      customer.topics.push(response.data.returnData);
-      notification("success", "Topic has been added successfully ✔");
-      handleClosePlanDialog();
+      notification("success", "Sub-Topic Addendum has been added successfully ✔");
+      handleCloseDialog();
     } catch (error) {
-      notification("error", error?.response ? error.response.data : "Something went wrong ❌");
+      notification(
+        "error",
+        error?.response ? error.response.data.errorMessage : "Something went wrong ❌"
+      );
     }
   };
   return (
@@ -173,7 +161,7 @@ const TablePlan = ({
         fullScreen
         style={{ maxWidth: "90%", left: "270px" }}
       >
-        <DialogTitle>Adding new topic for {customer.title}</DialogTitle>
+        <DialogTitle>Update for {customer.title}</DialogTitle>
         <DialogContent style={{ minWidth: "400px" }}>
           {/* Title input using useRef */}
           <FormControl fullWidth margin="normal">
@@ -282,7 +270,7 @@ const TablePlan = ({
               handleOpenPlanDialog(customer.id, customer.title);
             }}
           >
-            +Topic
+            +SubAddendum
           </Button>
           <Button
             variant="contained"
@@ -309,4 +297,4 @@ const TablePlan = ({
   );
 };
 
-export default TablePlan;
+export default SupTopic;

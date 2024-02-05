@@ -60,6 +60,18 @@ export const API_ROUTES = {
     put: "https://gaca.somee.com/api/Topic/Update",
     delete: "https://gaca.somee.com/api/Topic/Delete",
   },
+  sup_topic: {
+    get: "https://gaca.somee.com/api/SubTopic/GetContextById",
+    post: "https://gaca.somee.com/api/SubTopic/Create",
+    put: "https://gaca.somee.com/api/SubTopic/Update",
+    delete: "https:gaca.somee.com/api/SubTopic/Delete",
+  },
+  sup_topic_addendum: {
+    get: "https://gaca.somee.com/api/SubTopicAddendum/GetContextById/",
+    post: "https://gaca.somee.com/api/SubTopicAddendum/Create",
+    put: "https://gaca.somee.com/api/SubTopicAddendum/Update",
+    delete: "https://gaca.somee.com/api/SubTopicAddendum/Delete",
+  },
   stakeholder: {
     getAll: "https://gaca.somee.com/api/Stakeholder/GetAllPagination",
     post: "https://gaca.somee.com/api/Stakeholder/Create",

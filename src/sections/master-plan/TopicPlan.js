@@ -22,7 +22,7 @@ import React from "react";
 import TipTap from "../HomeAbout/TipTapEditor";
 import MasterPlanDialog from "src/utils/masterPlan-Dialog";
 import { API_ROUTES } from "src/utils/apiConfig";
-const Topic = ({ customer, isSelected, handleRemove, handleSelect }) => {
+const TopicPlan = ({ method, customer, isSelected, handleRemove, handleSelect, notification }) => {
   const { user } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
@@ -30,16 +30,17 @@ const Topic = ({ customer, isSelected, handleRemove, handleSelect }) => {
   const [currentName, setCurrentName] = useState("");
   const [docUrl, setdocUrl] = useState("");
   const [desc, setDesc] = useState(customer.description);
+  const [descriptionPlan, setDescriptionPlan] = useState(customer.description);
   const [title, setTitle] = useState(customer.title);
   const [openPlanDialog, setOpenPlanDialog] = useState(false);
   const [titlePlan, setTitlePlan] = useState("");
   const [descPlan, setDescPlan] = useState("");
+
   const handleClosePlanDialog = () => {
     setOpenPlanDialog(false);
   };
   const handleOpenPlanDialog = () => {
     setOpenPlanDialog(true);
-    console.log(customer.id, customer.masterPlanId);
   };
   //Human readable date
   const dateCreated = new Date(customer.dateCreated);
@@ -53,6 +54,7 @@ const Topic = ({ customer, isSelected, handleRemove, handleSelect }) => {
   const humanReadableDateCreated = dateCreated.toLocaleString("en-US", options);
   const humanReadableDateUpdated = dateUpdated.toLocaleString("en-US", options);
   const handleDelete = (id) => {
+    console.log(id);
     // Show the confirmation dialog
     setCurrentId(id);
     setIsDialogOpen(true);
@@ -63,15 +65,22 @@ const Topic = ({ customer, isSelected, handleRemove, handleSelect }) => {
 
     // ...
     try {
-      const response = await axios.delete(`${API_ROUTES.masterPlanContext.delete}/${currentId}`, {
-        headers: {
-          Authorization: `Bearer ${user}`,
-        },
-      });
+      const response = await axios.delete(
+        `${
+          method === "plan" ? API_ROUTES.topic.delete : API_ROUTES.masterPlanContext.delete
+        }/${currentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${user}`,
+          },
+        }
+      );
       setIsDialogOpen(false);
       handleRemove(currentId);
+      notification("success", "Topic has been deleted ✔");
     } catch (error) {
       console.log(error);
+      notification("error", "Something went wrong ❌");
     }
     // Close the confirmation dialog
   };
@@ -97,17 +106,17 @@ const Topic = ({ customer, isSelected, handleRemove, handleSelect }) => {
   // Function to handle file upload (you can customize this based on your API)
   const handlUpdateConfirm = async () => {
     // Perform file upload logic here
-
+    console.log(customer);
     // const file = fileRef.current.files[0];
 
     try {
       const response = await axios.put(
-        API_ROUTES.masterPlanContext.put,
+        API_ROUTES.topic.put,
         {
           id: customer.id,
           title: title,
           description: desc,
-          masterPlanId: customer.masterPlanId,
+          masterPlanId: customer.masterPlanLayerId,
         },
         {
           headers: {
@@ -116,9 +125,15 @@ const Topic = ({ customer, isSelected, handleRemove, handleSelect }) => {
         }
       );
       handleCloseDialog();
+      notification("success", "Topic has been updated successfully ✔");
       customer.title = title;
+      console.log(response.data);
     } catch (error) {
       console.log(error);
+      notification(
+        "error",
+        error.response ? error.response.data.errorMessage : "something went wrong ❌"
+      );
     }
     // Make your PUT request with the title and file here
   };
@@ -127,23 +142,29 @@ const Topic = ({ customer, isSelected, handleRemove, handleSelect }) => {
     console.log(customer.id);
     try {
       const response = await axios.post(
-        API_ROUTES.topic.post,
+        API_ROUTES.sup_topic.post,
 
         {
-          masterPlanLayerId: Number(customer.id),
+          topicId: customer.id,
           title: titlePlan,
           description: descPlan,
         },
         {
           headers: {
-            Authorization: `Bearer ${user}`,
+            Authorization: `Bearer  ${user}`,
           },
         }
       );
-      console.log(response);
-      handleCloseDialog();
-    } catch (error) {}
+
+      notification("success", "SubTopic has been added successfully ✔");
+      handleClosePlanDialog();
+    } catch (error) {
+      console.log(error);
+      if (error.response) notification("error", error.response.data.errorMessage);
+      else notification("error", "Soemthing went wrong check your connection ❌");
+    }
   };
+
   return (
     <TableRow hover selected={isSelected}>
       {/* {Adding new plan} */}
@@ -202,7 +223,11 @@ const Topic = ({ customer, isSelected, handleRemove, handleSelect }) => {
               style={{ marginBottom: "20px" }}
             />
             <label>Description</label>
-            <TipTap setDesc={setDesc} desc={desc} />
+            {method === "plan" ? (
+              <TipTap setDesc={setDescriptionPlan} desc={descriptionPlan} key={customer.id} />
+            ) : (
+              <TipTap setDesc={setDesc} desc={desc} key={customer.id} />
+            )}
           </FormControl>
         </DialogContent>
         <DialogActions>
@@ -258,7 +283,7 @@ const Topic = ({ customer, isSelected, handleRemove, handleSelect }) => {
               handleOpenPlanDialog(customer.id, customer.title);
             }}
           >
-            +Plan
+            +SubTopic
           </Button>
           <Button
             variant="contained"
@@ -285,4 +310,4 @@ const Topic = ({ customer, isSelected, handleRemove, handleSelect }) => {
   );
 };
 
-export default Topic;
+export default TopicPlan;

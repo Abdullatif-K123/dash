@@ -20,35 +20,18 @@ import { useRef, useState } from "react";
 import { useAuth } from "src/hooks/use-auth";
 import React from "react";
 import TipTap from "../HomeAbout/TipTapEditor";
-import MasterPlanDialog from "src/utils/masterPlan-Dialog";
 import { API_ROUTES } from "src/utils/apiConfig";
-const TablePlan = ({
-  notification,
-  method,
-  customer,
-  isSelected,
-  handleRemove,
-  handleSelect,
-  addingTitle,
-}) => {
+const SubAddendum = ({ method, customer, isSelected, notification }) => {
   const { user } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [currentId, setCurrentId] = useState("");
   const [currentName, setCurrentName] = useState("");
+  const [docUrl, setdocUrl] = useState("");
   const [desc, setDesc] = useState(customer.description);
   const [descriptionPlan, setDescriptionPlan] = useState(customer.description);
   const [title, setTitle] = useState(customer.title);
-  const [openPlanDialog, setOpenPlanDialog] = useState(false);
-  const [titlePlan, setTitlePlan] = useState("");
-  const [descPlan, setDescPlan] = useState("");
 
-  const handleClosePlanDialog = () => {
-    setOpenPlanDialog(false);
-  };
-  const handleOpenPlanDialog = () => {
-    setOpenPlanDialog(true);
-  };
   //Human readable date
   const dateCreated = new Date(customer.dateCreated);
   const dateUpdated = new Date(customer.dateUpdated);
@@ -72,21 +55,15 @@ const TablePlan = ({
 
     // ...
     try {
-      const response = await axios.delete(
-        `${
-          method === "plan" ? API_ROUTES.topic.delete : API_ROUTES.masterPlanContext.delete
-        }/${currentId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${user}`,
-          },
-        }
-      );
+      const response = await axios.delete(`${API_ROUTES.sup_topic_addendum.delete}/${currentId}`, {
+        headers: {
+          Authorization: `Bearer ${user}`,
+        },
+      });
       setIsDialogOpen(false);
-      notification("success", "Master Plan context has been deleted successfully ✔");
-      handleRemove(currentId);
+      notification("success", "Sub-topic addendum has been deleted successfully ✔");
     } catch (error) {
-      console.log(error);
+      notification("error", error?.response ? error.response.data : "Something went wrong ❌");
     }
     // Close the confirmation dialog
   };
@@ -100,7 +77,7 @@ const TablePlan = ({
   const handleOpenDialog = (id, name, url) => {
     setCurrentName(name);
     setCurrentId(id);
-
+    setdocUrl(url);
     setOpenDialog(true);
   };
 
@@ -112,17 +89,17 @@ const TablePlan = ({
   // Function to handle file upload (you can customize this based on your API)
   const handlUpdateConfirm = async () => {
     // Perform file upload logic here
-
+    console.log(customer);
     // const file = fileRef.current.files[0];
 
     try {
       const response = await axios.put(
-        API_ROUTES.masterPlanContext.put,
+        API_ROUTES.sup_topic_addendum.put,
         {
           id: customer.id,
           title: title,
           description: desc,
-          masterPlanId: customer.masterPlanId,
+          subTopicId: customer.subTopicId,
         },
         {
           headers: {
@@ -131,75 +108,16 @@ const TablePlan = ({
         }
       );
       handleCloseDialog();
-      notification("success", "Master plan context updated successfully ✔");
       customer.title = title;
-    } catch (error) {
-      console.log(error);
-      notification("error", "something went wrong ❌");
-    }
-    // Make your PUT request with the title and file here
-  };
-  const handleAddPlanDialog = async () => {
-    console.log("confirm");
-    console.log(customer.id);
-    try {
-      const response = await axios.post(
-        API_ROUTES.topic.post,
-
-        {
-          masterPlanLayerId: Number(customer.id),
-          title: titlePlan,
-          description: descPlan,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user}`,
-          },
-        }
-      );
-      customer.topics.push(response.data.returnData);
-      notification("success", "Topic has been added successfully ✔");
-      handleClosePlanDialog();
+      notification("success", "Sub-topic addendum has been changed successfully ✔");
     } catch (error) {
       notification("error", error?.response ? error.response.data : "Something went wrong ❌");
     }
+    // Make your PUT request with the title and file here
   };
+
   return (
     <TableRow hover selected={isSelected}>
-      {/* {Adding new plan} */}
-      <Dialog
-        open={openPlanDialog}
-        onClose={handleClosePlanDialog}
-        fullScreen
-        style={{ maxWidth: "90%", left: "270px" }}
-      >
-        <DialogTitle>Adding new topic for {customer.title}</DialogTitle>
-        <DialogContent style={{ minWidth: "400px" }}>
-          {/* Title input using useRef */}
-          <FormControl fullWidth margin="normal">
-            <InputLabel htmlFor="title-input">Title</InputLabel>
-            <Input
-              id="title-input"
-              type="text"
-              value={titlePlan}
-              onChange={(e) => {
-                setTitlePlan(e.target.value);
-              }}
-              style={{ marginBottom: "20px" }}
-            />
-            <label>Description</label>
-            <TipTap setDesc={setDescPlan} desc={descPlan} />
-          </FormControl>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClosePlanDialog} variant="contained" color="info">
-            Cancel
-          </Button>
-          <Button onClick={handleAddPlanDialog} variant="contained" color="success" autoFocus>
-            Confirm
-          </Button>
-        </DialogActions>
-      </Dialog>
       {/* Updating dialog  */}
       <Dialog
         open={openDialog}
@@ -259,15 +177,7 @@ const TablePlan = ({
             {" "}
             <DocumentIcon />{" "}
           </SvgIcon>
-          <Typography
-            variant="subtitle2"
-            style={{ cursor: "pointer" }}
-            onClick={() => {
-              handleSelect(customer.title);
-            }}
-          >
-            {customer.title}
-          </Typography>
+          <Typography variant="subtitle2">{customer.title}</Typography>
         </Stack>
       </TableCell>
       <TableCell> </TableCell>
@@ -275,15 +185,6 @@ const TablePlan = ({
       <TableCell>{humanReadableDateUpdated}</TableCell>
       <TableCell>
         <Stack alignItems="center" direction="row" spacing={1}>
-          <Button
-            variant="contained"
-            color="success"
-            onClick={() => {
-              handleOpenPlanDialog(customer.id, customer.title);
-            }}
-          >
-            +Topic
-          </Button>
           <Button
             variant="contained"
             color="info"
@@ -309,4 +210,4 @@ const TablePlan = ({
   );
 };
 
-export default TablePlan;
+export default SubAddendum;
