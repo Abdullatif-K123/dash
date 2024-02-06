@@ -25,10 +25,17 @@ const Page = () => {
 
   const searchParams = useSearchParams();
   const resetSuccess = searchParams.get("resetSuccess");
+  const expired = searchParams.get("expired");
+  const notification = resetSuccess ? resetSuccess : expired ? expired : "";
   const auth = useAuth();
   const [method, setMethod] = useState("email");
   const [rememberMe, setRememberMe] = useState(false);
-
+  const status = resetSuccess ? "success" : expired ? "warning" : "";
+  const messageNotification = resetSuccess
+    ? "Password reset successfully✔"
+    : expired
+    ? "Your session has expired please login again ⚠"
+    : "";
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -176,9 +183,9 @@ const Page = () => {
             </form>
           </div>
           <CustomizedSnackbars
-            open={resetSuccess} // Pass the resetSuccess flag to determine if the Snackbar should be shown
-            type="success" // Define the type of the Snackbar (e.g., success, error, warning)
-            message="Password reset successfully!" // Define the message to be displayed in the Snackbar
+            open={notification} // Pass the resetSuccess flag to determine if the Snackbar should be shown
+            type={status} // Define the type of the Snackbar (e.g., success, error, warning)
+            message={messageNotification} // Define the message to be displayed in the Snackbar
           />
         </Box>
       </Box>

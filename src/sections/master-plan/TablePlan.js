@@ -22,15 +22,8 @@ import React from "react";
 import TipTap from "../HomeAbout/TipTapEditor";
 import MasterPlanDialog from "src/utils/masterPlan-Dialog";
 import { API_ROUTES } from "src/utils/apiConfig";
-const TablePlan = ({
-  notification,
-  method,
-  customer,
-  isSelected,
-  handleRemove,
-  handleSelect,
-  addingTitle,
-}) => {
+import { useRouter } from "next/router";
+const TablePlan = ({ notification, method, customer, isSelected, handleRemove, handleSelect }) => {
   const { user } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
@@ -42,7 +35,7 @@ const TablePlan = ({
   const [openPlanDialog, setOpenPlanDialog] = useState(false);
   const [titlePlan, setTitlePlan] = useState("");
   const [descPlan, setDescPlan] = useState("");
-
+  const router = useRouter();
   const handleClosePlanDialog = () => {
     setOpenPlanDialog(false);
   };
@@ -157,6 +150,7 @@ const TablePlan = ({
           },
         }
       );
+      response.data.returnData.subTopics = [];
       customer.topics.push(response.data.returnData);
       notification("success", "Topic has been added successfully ✔");
       handleClosePlanDialog();
@@ -279,10 +273,12 @@ const TablePlan = ({
             variant="contained"
             color="success"
             onClick={() => {
-              handleOpenPlanDialog(customer.id, customer.title);
+              router.push(
+                `/master-plan/layer/topic?id=${customer.id}&titleContext=${customer.title}`
+              );
             }}
           >
-            +Topic
+            Topics
           </Button>
           <Button
             variant="contained"

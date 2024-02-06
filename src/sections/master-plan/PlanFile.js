@@ -1,14 +1,5 @@
 import PropTypes from "prop-types";
-import {
-  Box,
-  Card,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-} from "@mui/material";
+import { Box, Card, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 import { Scrollbar } from "src/components/scrollbar";
 import { useState } from "react";
 import TablePlan from "./TablePlan";
@@ -17,20 +8,11 @@ import SupTopic from "./SupTopic";
 import SubAddendum from "./SupAddendum";
 import CustomizedSnackbars from "src/components/Snackbar";
 export const PlanFile = (props) => {
-  const {
-    count = 0,
-    items = [],
-    onPageChange = () => {},
-    onRowsPerPageChange,
-    page = 0,
-    rowsPerPage = 0,
-    selected = [],
-    handleRemove,
-  } = props;
+  const { items = [], selected = [], handleRemove } = props;
   const [topic, setTopic] = useState([]);
   const [supTopic, setSupTopic] = useState([]);
   const [subAddendum, setSubAddendum] = useState([]);
-  const [method, setMethod] = useState("root");
+  const [method, setMethod] = useState(props.node);
   const [openSnack, setOpenSnack] = useState(false);
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState("success");
@@ -92,9 +74,6 @@ export const PlanFile = (props) => {
 
   return (
     <>
-      <p style={{ cursor: "pointer" }} onClick={handleNavigationTree}>
-        {method === "root" ? "" : method.toLocaleUpperCase()}
-      </p>
       <Card>
         {/* Delete dialog */}
         <Scrollbar>
@@ -112,7 +91,7 @@ export const PlanFile = (props) => {
               </TableHead>
               <TableBody>
                 {method === "topic"
-                  ? topic.map((customer) => {
+                  ? items.map((customer) => {
                       const isSelected = selected.includes(customer.id);
                       return (
                         <TopicPlan
@@ -128,7 +107,7 @@ export const PlanFile = (props) => {
                       );
                     })
                   : method === "sup-topic"
-                  ? supTopic.map((customer) => {
+                  ? items.map((customer) => {
                       const isSelected = selected.includes(customer.id);
                       // const createdAt = format(customer.createdAt, "dd/MM/yyyy");
                       return (
@@ -144,7 +123,7 @@ export const PlanFile = (props) => {
                       );
                     })
                   : method === "subAddendum"
-                  ? subAddendum.map((customer) => {
+                  ? items.map((customer) => {
                       const isSelected = selected.includes(customer.id);
                       return (
                         <SubAddendum
@@ -182,15 +161,6 @@ export const PlanFile = (props) => {
           open={openSnack}
           type={status}
           message={message}
-        />
-        <TablePagination
-          component="div"
-          count={count}
-          onPageChange={onPageChange}
-          onRowsPerPageChange={onRowsPerPageChange}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[5, 10, 25]}
         />
       </Card>
     </>

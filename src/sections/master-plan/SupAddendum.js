@@ -21,7 +21,7 @@ import { useAuth } from "src/hooks/use-auth";
 import React from "react";
 import TipTap from "../HomeAbout/TipTapEditor";
 import { API_ROUTES } from "src/utils/apiConfig";
-const SubAddendum = ({ method, customer, isSelected, notification }) => {
+const SubAddendum = ({ method, customer, isSelected, notification, handleRemove }) => {
   const { user } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
@@ -61,6 +61,7 @@ const SubAddendum = ({ method, customer, isSelected, notification }) => {
         },
       });
       setIsDialogOpen(false);
+      handleRemove(currentId);
       notification("success", "Sub-topic addendum has been deleted successfully ✔");
     } catch (error) {
       notification("error", error?.response ? error.response.data : "Something went wrong ❌");

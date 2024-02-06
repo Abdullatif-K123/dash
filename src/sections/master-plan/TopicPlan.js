@@ -20,8 +20,8 @@ import { useRef, useState } from "react";
 import { useAuth } from "src/hooks/use-auth";
 import React from "react";
 import TipTap from "../HomeAbout/TipTapEditor";
-import MasterPlanDialog from "src/utils/masterPlan-Dialog";
 import { API_ROUTES } from "src/utils/apiConfig";
+import { useRouter } from "next/router";
 const TopicPlan = ({ method, customer, isSelected, handleRemove, handleSelect, notification }) => {
   const { user } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -35,7 +35,7 @@ const TopicPlan = ({ method, customer, isSelected, handleRemove, handleSelect, n
   const [openPlanDialog, setOpenPlanDialog] = useState(false);
   const [titlePlan, setTitlePlan] = useState("");
   const [descPlan, setDescPlan] = useState("");
-
+  const router = useRouter();
   const handleClosePlanDialog = () => {
     setOpenPlanDialog(false);
   };
@@ -280,10 +280,12 @@ const TopicPlan = ({ method, customer, isSelected, handleRemove, handleSelect, n
             variant="contained"
             color="success"
             onClick={() => {
-              handleOpenPlanDialog(customer.id, customer.title);
+              router.push(
+                `/master-plan/layer/subtopic?id=${customer.id}&titleContext=${customer.title}`
+              );
             }}
           >
-            +SubTopic
+            SubTopic
           </Button>
           <Button
             variant="contained"

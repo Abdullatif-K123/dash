@@ -20,9 +20,9 @@ import { useRef, useState } from "react";
 import { useAuth } from "src/hooks/use-auth";
 import React from "react";
 import TipTap from "../HomeAbout/TipTapEditor";
-import MasterPlanDialog from "src/utils/masterPlan-Dialog";
 import { API_ROUTES } from "src/utils/apiConfig";
-const SupTopic = ({ method, customer, isSelected, handleSelect, addingTitle, notification }) => {
+import { useRouter } from "next/router";
+const SupTopic = ({ handleRemove, method, customer, isSelected, handleSelect, notification }) => {
   const { user } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
@@ -35,6 +35,7 @@ const SupTopic = ({ method, customer, isSelected, handleSelect, addingTitle, not
   const [openPlanDialog, setOpenPlanDialog] = useState(false);
   const [titlePlan, setTitlePlan] = useState("");
   const [descPlan, setDescPlan] = useState("");
+  const router = useRouter();
 
   const handleClosePlanDialog = () => {
     setOpenPlanDialog(false);
@@ -71,6 +72,8 @@ const SupTopic = ({ method, customer, isSelected, handleSelect, addingTitle, not
         },
       });
       setIsDialogOpen(false);
+
+      handleRemove(currentId);
       notification("success", "Sub-topic has been removed ✔");
     } catch (error) {
       notification("error", error?.response ? error.response.data : "Something went wrong ❌");
@@ -267,10 +270,12 @@ const SupTopic = ({ method, customer, isSelected, handleSelect, addingTitle, not
             variant="contained"
             color="success"
             onClick={() => {
-              handleOpenPlanDialog(customer.id, customer.title);
+              router.push(
+                `/master-plan/layer/subaddedum?id=${customer.id}&titleContext=${customer.title}`
+              );
             }}
           >
-            +SubAddendum
+            SubAddendum
           </Button>
           <Button
             variant="contained"
