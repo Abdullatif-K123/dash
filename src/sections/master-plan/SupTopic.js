@@ -250,13 +250,7 @@ const SupTopic = ({ handleRemove, method, customer, isSelected, handleSelect, no
             {" "}
             <DocumentIcon />{" "}
           </SvgIcon>
-          <Typography
-            variant="subtitle2"
-            style={{ cursor: "pointer" }}
-            onClick={() => {
-              handleSelect(customer.title);
-            }}
-          >
+          <Typography variant="subtitle2" style={{ cursor: "pointer" }}>
             {customer.title}
           </Typography>
         </Stack>

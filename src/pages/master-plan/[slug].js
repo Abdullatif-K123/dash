@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import Head from "next/head";
 import PlusIcon from "@heroicons/react/24/solid/PlusIcon";
 import {
@@ -12,9 +12,7 @@ import {
   InputLabel,
   TextareaAutosize,
 } from "@mui/material";
-import { useSelection } from "src/hooks/use-selection";
 import { Layout as DashboardLayout } from "src/layouts/dashboard/layout";
-import { applyPagination } from "src/utils/apply-pagination";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -28,41 +26,23 @@ import { useRouter } from "next/router";
 import { PlanFile } from "src/sections/master-plan/PlanFile";
 import TipTap from "src/sections/HomeAbout/TipTapEditor";
 import { API_ROUTES } from "src/utils/apiConfig";
-const now = new Date();
-
-let data = [];
-
-const useCustomers = (page, rowsPerPage) => {
-  return useMemo(() => {
-    return applyPagination(data, page, rowsPerPage);
-  }, [page, rowsPerPage]);
-};
-
-const useCustomerIds = (customers) => {
-  return useMemo(() => {
-    return customers.map((customer) => customer.id);
-  }, [customers]);
-};
-
 const MasterPlan = () => {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const customers = useCustomers(page, rowsPerPage);
-  const customersIds = useCustomerIds(customers);
-  const customersSelection = useSelection(customersIds);
   const [apiData, setApiData] = useState([]);
   const [open, setIsDialogOpen] = useState(false);
-  const [createdId, setCreatedId] = useState(null);
   const [masterTitle, setMasterTitle] = useState("");
   const [masterDescription, setMasterDescriptoin] = useState("");
   const [descPlan, setDescPlan] = useState("");
+  const [status, setStatus] = useState("success");
+  const [message, setMessage] = useState("");
   const inputRef = useRef(null);
   const { user } = useAuth();
   const router = useRouter();
   // Snackbar handling
   const [openSnack, setOpenSnack] = useState(false);
-  const handleClickSnack = () => {
+  const handleClickSnack = (status, message) => {
     setOpenSnack(true);
+    setStatus(status);
+    setMessage(message);
   };
 
   const handleCloseSnack = (event, reason) => {
@@ -101,25 +81,15 @@ const MasterPlan = () => {
         },
         { headers: { Authorization: `Bearer ${user}` } }
       );
-      handleClickSnack();
+      handleClickSnack("success", "New topic has added ✔");
       const idHolder = response.data.returnData;
       setApiData([...apiData, idHolder]);
     } catch (error) {
       console.log(error);
+      handleClickSnack("error", "Something went wrong ❌");
     }
-
-    handleOpenUploadDialog();
     // Close the dialog
     handleClose();
-  };
-
-  //Dialog for uploading file
-  const [openUploadDialog, setOpenUploadDialog] = useState(false);
-  const [fileUpload, setFileUpload] = useState({});
-
-  // Function to handle opening the file upload dialog
-  const handleOpenUploadDialog = () => {
-    setOpenUploadDialog(true);
   };
 
   //Handle remove stackholder
@@ -127,13 +97,6 @@ const MasterPlan = () => {
     const updateArray = apiData.filter((item) => item.id !== id);
     setApiData(updateArray);
   };
-  const handlePageChange = useCallback((event, value) => {
-    setPage(value);
-  }, []);
-
-  const handleRowsPerPageChange = useCallback((event) => {
-    setRowsPerPage(event.target.value);
-  }, []);
 
   //Get the data from server
   useEffect(() => {
@@ -172,14 +135,6 @@ const MasterPlan = () => {
     fetchData();
   }, [user, id]);
 
-  //Seach Filter appyling
-  const [searchQuery, SetSearchQuery] = useState("");
-  const handleSearchChange = (e) => {
-    SetSearchQuery(e.target.value);
-  };
-  const filterData = apiData.filter((card) =>
-    card.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
   const handleChange = (e) => {
     setMasterTitle(e.target.value);
   };
@@ -230,9 +185,11 @@ const MasterPlan = () => {
           onClose={handleClose}
           style={{ maxWidth: "90%", left: "270px" }}
         >
-          <DialogTitle>Add New Plan</DialogTitle>
+          <DialogTitle>Add New Context Plan</DialogTitle>
           <DialogContent>
-            <DialogContentText>Please enter the details for the new Plan.</DialogContentText>
+            <DialogContentText>
+              Please enter the details for the new context plan.
+            </DialogContentText>
             <TextField
               autoFocus
               margin="dense"
@@ -284,6 +241,7 @@ const MasterPlan = () => {
               hiddenLabel
               value={masterTitle}
             />
+            <InputLabel htmlFor="description">Description</InputLabel>
             <TextareaAutosize
               placeholder="Layer description"
               id="description"
@@ -308,20 +266,7 @@ const MasterPlan = () => {
               </Button>
             </div>
 
-            <PlanFile
-              count={filterData.length}
-              items={filterData}
-              onDeselectAll={customersSelection.handleDeselectAll}
-              onDeselectOne={customersSelection.handleDeselectOne}
-              onPageChange={handlePageChange}
-              onRowsPerPageChange={handleRowsPerPageChange}
-              onSelectAll={customersSelection.handleSelectAll}
-              onSelectOne={customersSelection.handleSelectOne}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              selected={customersSelection.selected}
-              handleRemove={handleRemove}
-            />
+            <PlanFile items={apiData} handleRemove={handleRemove} />
           </Stack>
         </Container>
       </Box>

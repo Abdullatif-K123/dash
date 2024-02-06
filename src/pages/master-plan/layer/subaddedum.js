@@ -22,11 +22,12 @@ import TipTap from "src/sections/HomeAbout/TipTapEditor";
 import { PlanFile } from "src/sections/master-plan/PlanFile";
 import CustomizedSnackbars from "src/components/Snackbar";
 import { ArrowLeftIcon } from "@mui/x-date-pickers";
-
 const SubAdded = () => {
   const [apiData, setApiData] = useState([]);
   const [open, setIsDialogOpen] = useState(false);
   const [descPlan, setDescPlan] = useState("");
+  const [status, setStatus] = useState("success");
+  const [message, setMessage] = useState("");
   const inputRef = useRef(null);
   const router = useRouter();
   const { id, titleContext } = router.query;
@@ -34,8 +35,10 @@ const SubAdded = () => {
   const auth = useAuth();
   // Snackbar handling
   const [openSnack, setOpenSnack] = useState(false);
-  const handleClickSnack = () => {
+  const handleClickSnack = (status, message) => {
     setOpenSnack(true);
+    setStatus(status);
+    setMessage(message);
   };
 
   const handleCloseSnack = (event, reason) => {
@@ -70,11 +73,15 @@ const SubAdded = () => {
         },
         { headers: { Authorization: `Bearer ${user}` } }
       );
-      handleClickSnack();
+      handleClickSnack("success", "sub topic addendum has been created successfully ✔");
       const idHolder = response.data.returnData;
       setApiData([...apiData, idHolder]);
     } catch (error) {
       console.log(error);
+      handleClickSnack(
+        "error",
+        error.response ? error.response.data.title : "Something went wrong❌"
+      );
     }
 
     // Close the dialog
@@ -95,6 +102,7 @@ const SubAdded = () => {
         // Update the component state with the fetched data
       } catch (error) {
         console.log(error);
+        handleClickSnack;
         if (error?.response?.status == 401) {
           auth.signOut();
           router.replace("/auth/login?expired=true");
@@ -161,7 +169,7 @@ const SubAdded = () => {
         onClose={handleClose}
         style={{ maxWidth: "90%", left: "270px" }}
       >
-        <DialogTitle>Add New Sub Topic</DialogTitle>
+        <DialogTitle>Add New Sub Topic Addendum</DialogTitle>
         <DialogContent>
           <DialogContentText>Please enter the details for the new sub topic.</DialogContentText>
           <TextField
@@ -189,8 +197,8 @@ const SubAdded = () => {
       <CustomizedSnackbars
         open={openSnack}
         handleClose={handleCloseSnack}
-        type={"success"}
-        message={"The data has been changed"}
+        type={status}
+        message={message}
       />
     </>
   );
